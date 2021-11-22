@@ -9,7 +9,6 @@ import { StoreResolver } from "./Resolvers/Store.resolver";
 
 
 async function App() {
-
     const app = express ()
     const schema = await buildSchema({
         resolvers: [StoreResolver],
@@ -21,7 +20,18 @@ async function App() {
         loadResolversFromGlob: true,
         useUrlParser: true,
         
-    }))
+        
+        
+    }))    
+    // const apolloServer = new ApolloServer({
+    //     schema,
+    //     //@ts-ignore
+    //     playground: true
+        
+    // });
+    // await apolloServer.start();
+    // //@ts-ignore
+    // apolloServer.applyMiddleware({ app });
     await mongoose.connect(DbUrl, DbConnectionOptions)
     .then( ()=> {
         app.listen(3000, ()=>{
@@ -31,7 +41,6 @@ async function App() {
     .catch( err => {
         console.log(err);
     });
-
 }
 
 App();

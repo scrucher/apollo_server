@@ -5,7 +5,7 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 
 
 @ObjectType()
-export class Store{
+export class Store extends Model{
 
     @Field(() => ID)
     @prop({ required: true, unique: true })
@@ -47,4 +47,4 @@ export class Store{
 
 }
 
-export const StoreModel = getModelForClass(Store)
+// export const StoreModel = getModelForClass(Store)
