@@ -2,6 +2,6 @@
     "watch": [],
     "ext": ".ts,.js",
     "ignore": [],
-    "exec": "ts-node-dev ./main.ts"
+    "exec": "ts-node ./main.ts"
     
 }

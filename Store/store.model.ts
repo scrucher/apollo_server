@@ -25,6 +25,9 @@ export class Store extends Schema {
     @prop()
     password?: string;
 
+    @prop()
+    salt?: string;
+
     @Field(() => String)
     @prop()
     phone?: string

@@ -32,7 +32,7 @@ KScGCloyHgoQb9p0aidoNCEpem0izvmaG5XxFs73ZZtwdBj1PR0uSA==
 
 
 
-const GenerateToken = (user: any): string => {
+const GenerateToken = (user: any)=> {
     const id:string = user;
    
     const token =  jwt.sign({

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const DecodeToken = (token: string) =>{
+const DecodeToken = (token: string)=>{
     const key = 
 `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxUuKAfPu2dsMgjNAXL7b
