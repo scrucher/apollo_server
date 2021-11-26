@@ -6,7 +6,8 @@ import { ApolloServer} from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import Container from "typedi";
 import express from "express";
-import { StoreResolver } from "./Store/Store.resolver";
+import { StoreResolver } from "./Users/Users.resolver";
+import { GoogleAuth } from "./Config/google.auth";
 
 dotenv.config();
 
@@ -29,20 +30,17 @@ async function App() {
             container.set("context", context); // place context or other data in container
             return context;
         },
-        // plugins: [
-        //     {
-        //         requestDidStart: ()=> ({
-        //             willSendResponse(requestContext:any) {
-        //                 // remember to dispose the scoped container to prevent memory leaks
-        //                 Container.reset(requestContext.context.requestId);
-        //             },
-        //         }),
-        //     },
-        // ],
-
-
     });
     await apolloServer.start();
+    app.use("/callback/googleauth", async (req, res) => {
+        console.log(req.query.code)
+        const data = req.query.code
+        const Resolver = new GoogleAuth();
+        //@ts-ignore
+        const result = Resolver.getGoogleAccountFromCode(data)
+        console.log(result);
+        return res.send("hello")
+    })
     apolloServer.applyMiddleware({ app });
     //@ts-ignore
     await mongoose.connect(DbUrl, {

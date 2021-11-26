@@ -1,5 +1,5 @@
-import {  Date, Model, PromiseProvider, Schema } from "mongoose";
-import { Field, ID, ObjectType } from "type-graphql";
+import { Schema } from "mongoose";
+import { Field, ID, Int, ObjectType, } from "type-graphql";
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
 
@@ -8,7 +8,9 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 export class Store extends Schema {
 
     @Field(() => ID)
-    @prop()
+    @prop({
+        type: String,
+    })
     //@ts-ignore
     _id: string;
 
@@ -44,18 +46,33 @@ export class Store extends Schema {
     @prop()
     city?: string
 
-    @Field(()=> String)
+    @Field(() => String)
     @prop()
-        //@ts-ignore
-    created_at?: Date
+    adress?: string
 
     @Field(() => String)
     @prop()
-    updated_at?: Date
+    image?: string
+
+    @Field(() => String)
+    @prop({
+        type: String,
+        enum: ["STORE", "DRIVER", "VISITOR"],
+        default: "VISITOR",
+    })
+    role?: string
+
+    @Field(() => Boolean || null)
+    @prop({
+        type: Boolean || null ,
+        enum: [false, true],
+        addNullToEnum: true,
+    })
+    IsActive?: boolean
 
     @Field(() => String)
     token: string
 
 }
 
-export const StoreModel = getModelForClass(Store)
+export const StoreModel = getModelForClass(Store, {schemaOptions: {timestamps: true}})

@@ -1,6 +1,6 @@
-import { MaxLength } from "class-validator";
+import { IsOptional, MaxLength } from "class-validator";
 import { ArgsType, Field, InputType } from "type-graphql";
-import { StoreArgs } from "./store.args";
+import { StoreArgs } from "./Users.args";
 
 @ArgsType()
 @InputType()
@@ -35,4 +35,21 @@ export class StoreInput{
     @Field(() => String)
     @MaxLength(30)
     city?: string
+
+    @Field(() => String)
+    @MaxLength(30)
+    image?: string
+
+    @Field(() => String)
+    @MaxLength(30)
+    adress?: string
+
+    @Field(() => String)
+    @MaxLength(30)
+    role?: string
+
+    // @Field(() => Boolean|| null)
+    // @MaxLength(30)
+    // @IsOptional()
+    // IsActive?: boolean 
 }

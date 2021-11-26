@@ -1,12 +1,12 @@
 import { Service } from "typedi";
-import { StoreArgs } from "./store.args";
-import { StoreInput } from "./Store.input";
-import { Store, StoreModel } from "./store.model";
+import { StoreArgs } from "./Users.args";
+import { StoreInput } from "./Users.input";
+import { Store, StoreModel } from "./Users.model";
 import * as crypto from "crypto";
 import { v4 } from "uuid";
 import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
-import { StoreLoginInput } from "./StoreLogin.input";
+import { StoreLoginInput } from "./UsersLogin.input";
 
 @Service('Store_Service')
 export class StoreService {
@@ -15,6 +15,9 @@ export class StoreService {
             email,
             phone,
             city,
+            role,
+            adress,
+            image,
             region,
             country,
             password } = storeInput;
@@ -24,14 +27,18 @@ export class StoreService {
             throw new InternalServerError("Account Already Exist")
         } else {
             const store = new StoreModel;
-            store._id = await v4();
+            store._id =  v4();
             store.store_name = store_name;
             store.salt = crypto.randomBytes(16).toString('hex')
             //@ts-ignore
-            store.password = await crypto.pbkdf2Sync(password, store.salt, 1000, 64, "sha512").toString('hex');
+            store.password = crypto.pbkdf2Sync(password, store.salt, 1000, 64, "sha512").toString('hex');
             store.email = email;
             store.phone = phone;
             store.city = city;
+            store.image = image;
+            store.adress = adress;
+            store.role = role;
+            if (role === "DRIVER") store.IsActive = false;
             store.region = region;
             store.country = country;
             const saved = await StoreModel.create(store)
