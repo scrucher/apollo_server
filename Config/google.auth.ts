@@ -16,8 +16,10 @@ export class GoogleAuth{
     };
 
     defaultScope = [
-        'https://www.googleapis.com/auth/plus.me',
+        // 'https://www.googleapis.com/auth/plus.me',
         'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'openid'
     ];
 
 
@@ -39,8 +41,8 @@ export class GoogleAuth{
         });
     }
 
-    getGooglePlusApi(auth:any) {
-        return google.plus({ version: 'v1', auth });
+    async getGooglePlusApi(auth:any) {
+        return await google.plus({ version: 'v1', auth });
     }
 
 
@@ -70,7 +72,7 @@ export class GoogleAuth{
         const tokens = data.tokens;
         auth.setCredentials(tokens);
         const plus = this.getGooglePlusApi(auth);
-        const me = await plus.people.get({ userId: 'me' });
+        const me = await (await plus).people.get({ userId: 'me' });
         console.log(me);
         const userGoogleId = me.data.id;
         const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;

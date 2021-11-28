@@ -4,7 +4,7 @@ import { ArgsType, Field, InputType } from "type-graphql";
 @ArgsType()
 @InputType()
 
-export class UserLoginInput {
+export class StoreLoginInput {
     @Field(() => String)
     @MaxLength(30)
     email?: string;

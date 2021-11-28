@@ -1,13 +1,19 @@
 import { Schema } from "mongoose";
-import { Authorized, Field, ObjectType, } from "type-graphql";
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { Authorized, Field, ID, ObjectType, } from "type-graphql";
+import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
+import { Product } from "../Products/Product.model";
 
 
 
 @ObjectType()
-export class User extends Schema {
+export class Store extends Schema {
 
-   
+    @Field(() => ID)
+    @prop({
+        type: String,
+    })
+    //@ts-ignore
+    _id: string;
 
     @Field(() => String)
     @prop()
@@ -46,9 +52,7 @@ export class User extends Schema {
     adress?: string
 
     @Field(() => String)
-    @prop({
-        typre: Array
-    })
+    @prop()
     image?: string
 
     @Field(() => String)
@@ -70,10 +74,17 @@ export class User extends Schema {
     @Field(() => String)
     token: string
 
-    @Authorized("USER")
+    @Field(() => ID)
+    @prop({
+        type: mongoose.Types.ObjectId,
+        ref: "Product"
+    })
+    product?: Product[];
+
+    @Authorized("STORE")
     @Field({ nullable: true })
     hiddenField?: string;
 
 }
 
-export const UserModel = getModelForClass(User, {schemaOptions: {timestamps: true}})
+export const StoreModel = getModelForClass(Store, {schemaOptions: {timestamps: true}})

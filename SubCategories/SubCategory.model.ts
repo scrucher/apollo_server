@@ -6,7 +6,7 @@ import { User } from "../Users/Users.model";
 
 
 @ObjectType()
-export class Product extends Schema {
+export class SubCategory extends Schema {
 
     @Field(()=> String)
     _id:string
@@ -24,7 +24,7 @@ export class Product extends Schema {
     @prop()
     details?: string;
 
-    @Field()
+    @Field(()=> String)
     @prop({
         type: Array,
     })
@@ -36,15 +36,13 @@ export class Product extends Schema {
     })
     price?: string;
 
-    @Field(() => ID)
     @prop({
         type: mongoose.Types.ObjectId,
-        ref: "Store"
+        ref: "User",
     })
-    user?: string;
-
+    user: User;
 
 
 }
 
-export const ProductModel = getModelForClass(Product, { schemaOptions: { timestamps: true } })
+export const SubCategoryModel = getModelForClass(SubCategory, { schemaOptions: { timestamps: true } })

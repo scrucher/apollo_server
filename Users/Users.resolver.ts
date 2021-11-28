@@ -3,27 +3,26 @@ import { Inject, Service } from "typedi";
 import { GoogleAuth } from "../Config/google.auth";
 import { GoogleInput } from "../Config/Google.input";
 import { Google } from "../Config/Google.type";
-import { StoreArgs } from "./Users.args";
-import { StoreInput } from "./Users.input";
-import { Store} from "./Users.model"
-import { StoreService } from "./Users.service";
-import { StoreLoginInput } from "./UsersLogin.input";
+import { UserInput } from "./Users.input";
+import { User} from "./Users.model"
+import { UserService } from "./Users.service";
+import { UserLoginInput } from "./UsersLogin.input";
 
 
 
 @Service()
-@Resolver(of => Store)
+@Resolver(of => User)
     
-export class StoreResolver {
+export class UserResolver {
 
     constructor(
-        @Inject('Store_Service') private storeService: StoreService,
+        @Inject('User_Service') private userService: UserService,
         @Inject('Google_Auth') private googleAuth: GoogleAuth,
     ) { }
     
-    @Query(returns => [Store])
-    async getStore(@Args() {skip, take}: StoreArgs) {
-        const data = await this.storeService.getAllStores({skip, take})
+    @Query(returns => [User], {nullable: true})
+    async getUser() {
+        const data = await this.userService.getAllStores()
         return data;
     }
 
@@ -40,15 +39,14 @@ export class StoreResolver {
     }
 
 
-    @Mutation(returns => Store)
-        //@ts-ignore
-    async CreateStore(@Args("storeInput") storeInput: StoreInput){
-        return await this.storeService.CreateStore(storeInput)
+    @Mutation(returns => User, {nullable: true})
+    async CreateUser(@Args() storeInput: UserInput){
+        return await this.userService.CreateStore(storeInput)
     }
 
-    @Mutation(returns => Store)
-    async StoreLogin(@Args() storeLoginInput: StoreLoginInput) {
-        return await this.storeService.StoreLogin(storeLoginInput);
+    @Mutation(returns => User, {nullable: true})
+    async UserLogin(@Args() storeLoginInput: UserLoginInput) {
+        return await this.userService.StoreLogin(storeLoginInput);
     }
 
 }

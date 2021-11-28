@@ -1,12 +1,11 @@
 import { Schema } from "mongoose";
 import { Field, ID, Int, ObjectType, } from "type-graphql";
-import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
-import { User } from "../Users/Users.model";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
 
 
 @ObjectType()
-export class Product extends Schema {
+export class Category extends Schema {
 
     @Field(()=> String)
     _id:string
@@ -24,7 +23,7 @@ export class Product extends Schema {
     @prop()
     details?: string;
 
-    @Field()
+    @Field(()=> String)
     @prop({
         type: Array,
     })
@@ -36,15 +35,7 @@ export class Product extends Schema {
     })
     price?: string;
 
-    @Field(() => ID)
-    @prop({
-        type: mongoose.Types.ObjectId,
-        ref: "Store"
-    })
-    user?: string;
-
-
 
 }
 
-export const ProductModel = getModelForClass(Product, { schemaOptions: { timestamps: true } })
+export const CategoryModel = getModelForClass(Category, { schemaOptions: { timestamps: true } })

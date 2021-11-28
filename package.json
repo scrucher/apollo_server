@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
-    "start:dev": "nodemon -x ts-node ./main.ts"
+    "start:dev": "ts-node-dev ./main.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "express-graphql": "^0.12.0",
     "googleapis": "^91.0.0",
     "graphql": "^15.7.2",
+    "joiful": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
     "l": "^0.6.0",
     "mongoose": "^6.0.13",

@@ -6,32 +6,38 @@ import { ApolloServer} from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import Container from "typedi";
 import express from "express";
-import { StoreResolver } from "./Users/Users.resolver";
 import { GoogleAuth } from "./Config/google.auth";
+import { IsAuthorized } from "./Utilities/IsAuthorized";
+import { Context } from "apollo-server-core";
+import { customAuthChecker } from "./Utilities/custom-auth-check";
 
 dotenv.config();
+
 
 
 async function App() {
     const app = express();
     const port = process.env.PORT;
+    // app.use(IsAuthorized)
     const schema = await buildSchema({
-        resolvers: [StoreResolver],
+        resolvers: [__dirname + "/**/*.resolver.{ts,js}"],
         container: Container,
+        authChecker: customAuthChecker,
     });
     const apolloServer = new ApolloServer({
         schema,
-        context: () => {
-            // generate the requestId (it also may come from `express-request-id` or other middleware)
-            const requestId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER); // uuid-like
-            //@ts-ignore
-            const container = Container.of(requestId); // get the scoped container
-            const context = { requestId, container }; // create fresh context object
-            container.set("context", context); // place context or other data in container
+        context: ({ req }) => {
+            const context = {
+                req,
+                //@ts-ignore
+                user: req.user, // `req.user` comes from `express-jwt`
+            };
             return context;
         },
     });
-    await apolloServer.start();
+    await apolloServer.start()
+
+
     app.use("/callback/googleauth", async (req, res) => {
         console.log(req.query.code)
         const data = req.query.code
@@ -41,11 +47,13 @@ async function App() {
         console.log(result);
         return res.send("hello")
     })
+
+
     apolloServer.applyMiddleware({ app });
     //@ts-ignore
     await mongoose.connect(DbUrl, {
         autoIndex: true,
-    }) 
+    })
         .then(() => {
         mongoose.set('debug', true)
         app.listen(port, ()=>{
@@ -54,7 +62,7 @@ async function App() {
         })
         .catch(err => {
         console.log(err);
-    });       
+    });
 }
 
 App();
