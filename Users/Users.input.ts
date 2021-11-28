@@ -1,10 +1,10 @@
-import {MaxLength } from "class-validator";
+import { IsOptional, MaxLength } from "class-validator";
 import { ArgsType, Field, InputType } from "type-graphql";
 
 @ArgsType()
 @InputType()
 
-export class StoreInput{
+export class UserInput{
 
     @Field(() => String)
     @MaxLength(30)
@@ -36,7 +36,6 @@ export class StoreInput{
     city?: string
 
     @Field(() => [String])
-    @MaxLength(30)
     image?: string[]
 
     @Field(() => String)

@@ -1,15 +1,15 @@
 import { Service } from "typedi";
-import { StoreInput } from "./Store.input";
-import { Store, StoreModel } from "./Store.model";
+import { UserInput } from "./Users.input";
+import { User, UserModel } from "./Users.model";
 import * as crypto from "crypto";
 import { v4 } from "uuid";
 import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
-import { StoreLoginInput } from "./StoreLogin.input";
+import { UserLoginInput } from "./UsersLogin.input";
 
-@Service('Store_Service')
-export class StoreService {
-    async CreateStore(storeInput: StoreInput){
+@Service('User_Service')
+export class UserService {
+    async CreateStore(storeInput : UserInput){
         const { store_name,
             email,
             phone,
@@ -20,28 +20,27 @@ export class StoreService {
             region,
             country,
             password } = storeInput;
-        const found = await StoreModel.findOne({ email })
+        const found = await UserModel.findOne({ email })
         if (found?.email === email && found?.city === city) {
             console.log(found)
             throw new InternalServerError("Account Already Exist")
         } else {
-            const store = new StoreModel;
-            store._id =  v4();
-            store.store_name = store_name;
-            store.salt = crypto.randomBytes(16).toString('hex')
+            const user = new UserModel;
+            user.store_name = store_name;
+            user.salt = crypto.randomBytes(16).toString('hex')
             //@ts-ignore
-            store.password = crypto.pbkdf2Sync(password, store.salt, 1000, 64, "sha512").toString('hex');
-            store.email = email;
-            store.phone = phone;
-            store.city = city;
-            //@ts-ignore
-            store.image = image;
-            store.adress = adress;
-            store.role = role;
-            if (role === "DRIVER") store.IsActive = false;
-            store.region = region;
-            store.country = country;
-            const saved = await StoreModel.create(store)
+            user.password = crypto.pbkdf2Sync(password, user.salt, 1000, 64, "sha512").toString('hex');
+            user.email = email;
+            user.phone = phone;
+            user.city = city;
+            //@ts-ignoreore
+            user.image = image;
+            user.adress = adress;
+            user.role = role;
+            if (role === "DRIVER") user.IsActive = false;
+            user.region = region;
+            user.country = country;
+            const saved = await UserModel.create(user)
                 .then(data => data)
                 .catch(err => {
                     console.log(err);
@@ -54,22 +53,22 @@ export class StoreService {
         }
     }
 
-    async StoreLogin(storeLoginInput: StoreLoginInput) {
+    async StoreLogin(storeLoginInput: UserLoginInput) {
         const { email, password } = storeLoginInput;
-        const store = await StoreModel.findOne({ email })
+        const user = await UserModel.findOne({ email })
             .then(data => data)
             .catch(err => {
                 console.log(err);
                 throw new InternalServerError("Inetrnal Server Error")
             })
-        console.log(store)
-        if (!store) throw new NotFoundError("Store Not Found")
-        const salt = store.salt
+        console.log(user)
+        if (!user) throw new NotFoundError("Store Not Found")
+        const salt = user.salt
         //@ts-ignore
         const pswd = await crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString('hex');
-        if (store && pswd === store.password) {
-            const token = GenerateToken(store._id);
-            return ({store, token: token });
+        if (user && pswd === user.password) {
+            const token = GenerateToken(user._id);
+            return ({user, token: token });
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")
         }
@@ -78,7 +77,7 @@ export class StoreService {
     }
 
     async getAllStores(){
-        const found = await StoreModel.find()
+        const found = await UserModel.find()
             .then((data:any )=> {
                 return data 
             })
@@ -90,9 +89,9 @@ export class StoreService {
         return found;
     }
 
-    async getStoreById():Promise <Store> {
+    async getStoreById():Promise <User> {
         const id =""
-        const found = await StoreModel.findById(id)
+        const found = await UserModel.findById(id)
             .then((data: any) => {
                 return data
             })
@@ -107,7 +106,7 @@ export class StoreService {
 
     async deleteStore():Promise<void> {
         // const id =""
-        // const deleted = await StoreModel.deleteOne()
+        // const deleted = await UserModel.deleteOne()
         //     .then((data: any) => {
         //         return data
         //     })
@@ -119,7 +118,7 @@ export class StoreService {
     async updateStore() {
         // const data = {};
         // const id = ""
-        // const updated = await StoreModel.update(filter: "")
+        // const updated = await UserModel.update(filter: "")
         //     .then((data: any) => {
         //         return data
         //     })
