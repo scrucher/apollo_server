@@ -1,6 +1,8 @@
 import { Schema } from "mongoose";
 import { Field, ID, Int, ObjectType, } from "type-graphql";
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
+import { Product } from "../Products/Product.model";
+import { SubCategory } from "../SubCategories/SubCategory.model";
 
 
 
@@ -13,27 +15,20 @@ export class Category extends Schema {
     @Field(() => String)
     @prop()
 
-    product_name?: string;
+    category_name?: string;
 
-    @Field(() => String)
-    @prop()
-    description?: string;
-
-    @Field(() => String)
-    @prop()
-    details?: string;
-
-    @Field(()=> String)
     @prop({
-        type: Array,
+        type: mongoose.Types.ObjectId,
+        ref: "Store"
     })
-    images?: string;
+    products?: Product[];
 
-    @Field(() => String)
     @prop({
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: "Store"
     })
-    price?: string;
+    sub_categoris?: SubCategory[];
+
 
 
 }

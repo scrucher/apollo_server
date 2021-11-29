@@ -10,7 +10,7 @@ export const customAuthChecker: AuthChecker = async (
     roles,
 ) => {
     //@ts-ignore
-    const token = context.token
+    const token = context.body.authorization
     // here we can read the user from context
     const id = DecodeToken(token)
     // and check his permission in the db against the `roles` argument

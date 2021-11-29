@@ -41,13 +41,4 @@ export class UserInput{
     @Field(() => String)
     @MaxLength(30)
     adress?: string
-
-    @Field(() => String)
-    @MaxLength(30)
-    role?: string
-
-    // @Field(() => Boolean|| null)
-    // @MaxLength(30)
-    // @IsOptional()
-    // IsActive?: boolean 
 }

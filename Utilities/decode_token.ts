@@ -11,9 +11,11 @@ F+U/RKx07T4PMU9mZfXy+GPv2pdKpcjCE+8WnbG1zTjP5VP5TkGOS1azf6uK+FEI
 vW67DoXXpdD22o82ug6q9SwxGwYnkJTwy01+TOYu18cqvQ1Faa2OtuiFUdJFF3nh
 iwIDAQAB
 -----END PUBLIC KEY-----`;
+    const secret: any = process.env.JWT_SECRET
     
-    const decoded = jwt.verify(token, key);
+    const decoded = jwt.verify(token, secret);
     return decoded;
+
 }
 
 export default DecodeToken;

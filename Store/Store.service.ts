@@ -14,7 +14,6 @@ export class StoreService {
             email,
             phone,
             city,
-            role,
             adress,
             image,
             region,
@@ -37,8 +36,6 @@ export class StoreService {
             //@ts-ignore
             store.image = image;
             store.adress = adress;
-            store.role = role;
-            if (role === "DRIVER") store.IsActive = false;
             store.region = region;
             store.country = country;
             const saved = await StoreModel.create(store)

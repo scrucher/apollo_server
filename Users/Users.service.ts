@@ -14,13 +14,14 @@ export class UserService {
             email,
             phone,
             city,
-            role,
             adress,
             image,
             region,
             country,
             password } = storeInput;
-        const found = await UserModel.findOne({ email })
+        const found = await UserModel.findOne({
+            where: email
+        })
         if (found?.email === email && found?.city === city) {
             console.log(found)
             throw new InternalServerError("Account Already Exist")
@@ -36,8 +37,6 @@ export class UserService {
             //@ts-ignoreore
             user.image = image;
             user.adress = adress;
-            user.role = role;
-            if (role === "DRIVER") user.IsActive = false;
             user.region = region;
             user.country = country;
             const saved = await UserModel.create(user)
@@ -46,6 +45,7 @@ export class UserService {
                     console.log(err);
                     throw new InternalServerError("Account Already Exist")
                 })
+            console.log(saved._id);
             const token = GenerateToken(saved._id)
             return ({data:saved, token: token});
             
@@ -55,19 +55,19 @@ export class UserService {
 
     async StoreLogin(storeLoginInput: UserLoginInput) {
         const { email, password } = storeLoginInput;
-        const user = await UserModel.findOne({ email })
+        const user = await UserModel.findOne({email})
             .then(data => data)
             .catch(err => {
                 console.log(err);
                 throw new InternalServerError("Inetrnal Server Error")
             })
-        console.log(user)
+        console.log(user?._id)
         if (!user) throw new NotFoundError("Store Not Found")
         const salt = user.salt
         //@ts-ignore
         const pswd = await crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString('hex');
         if (user && pswd === user.password) {
-            const token = GenerateToken(user._id);
+            const token = GenerateToken(user.email);
             return ({user, token: token });
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")
