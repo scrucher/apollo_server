@@ -1,5 +1,6 @@
-import { Args, Mutation, Query, Resolver} from "type-graphql";
+import { Args,Ctx ,Mutation, Query, Resolver} from "type-graphql";
 import { Inject, Service } from "typedi";
+import { SubCategoryArgs } from "./SubCategory.args";
 import { SubCategoryInput } from "./SubCategory.input";
 import { SubCategory } from "./SubCategory.model";
 import { SubCategoryService } from "./SubCategory.service";
@@ -12,31 +13,41 @@ import { SubCategoryService } from "./SubCategory.service";
 export class SubCategoryResolver {
 
     constructor(
-        @Inject('SubCategory_Service') private subCategoryService: SubCategoryService,
+        @Inject('Category_Service') private subCategorytService: SubCategoryService,
     ) { }
 
     @Query(returns => [SubCategory])
-    async getSubCategories(): Promise<SubCategory[]> {
-        const data = await this.subCategoryService.getAllProducts()
+    async GetSubCategories(): Promise<SubCategory[]> {
+        const data = await this.subCategorytService.GetAllCategories()
         return data;
     }
-    
     @Query(returns => SubCategory)
-    async getSubCategoriyById(id : string):Promise<SubCategory>{
-      return await this.subCategoryService.getProductById(id);
+    async GetSubCategoryById( @Args() subCategoryArgs: SubCategoryArgs):Promise<SubCategory>{
+      return await this.subCategorytService.GetCategoryById(subCategoryArgs);
     }
 
 
 
     @Mutation(returns => SubCategory)
     //@ts-ignore
-    async CreateSubCategory(@Args("storeInput") subCategoryInput: SubCategoryInput) {
-        return await this.subCategoryService.CreateProduct(subCategoryInput)
+    async CreateSubCategory(@Args("subCategoryInput") subCategoryInput: SubCategoryInput, @Ctx() context: Context) {
+        return await this.subCategorytService.CreateCategory(subCategoryInput, context)
     }
 
-    // @Mutation(returns => SubCategory)
-    // async StoreLogin() {
-    //     return await this.subCategoryService.StoreLogin(storeLoginInput);
-    //}
+    @Mutation(returns => SubCategory, {nullable: true})
+    async UpdateSubCategory(
+        @Args() subCategoryArgs: SubCategoryArgs,
+        @Args() subCategoryInput : SubCategoryInput
+    ) {
+        return await this.subCategorytService.updateCategory(subCategoryInput, subCategoryArgs)
+    }
+
+    @Mutation(returns => SubCategory)
+    async DeleteSubCategory(
+        @Args() subCategoryArgs: SubCategoryArgs
+    ) {
+        return await this.subCategorytService.DeleteCategory(subCategoryArgs);
+    }
+
 
 }

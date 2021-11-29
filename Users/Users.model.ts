@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { Authorized, Field, ObjectType, } from "type-graphql";
+import { Authorized, Field, ObjectType, ID } from "type-graphql";
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
 
@@ -7,7 +7,8 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 @ObjectType()
 export class User extends Schema {
 
-   
+   @Field(() => ID)
+   _id: string
 
     @Field(() => String)
     @prop()
@@ -50,14 +51,6 @@ export class User extends Schema {
         typre: Array
     })
     image?: string
-
-    @Field(() => String)
-    @prop({
-        type: String,
-        enum: ["STORE", "DRIVER", "VISITOR"],
-        default: "VISITOR",
-    })
-    role?: string
 
     @Field(() => Boolean || null)
     @prop({

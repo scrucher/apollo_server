@@ -33,12 +33,10 @@ KScGCloyHgoQb9p0aidoNCEpem0izvmaG5XxFs73ZZtwdBj1PR0uSA==
 
 
 const GenerateToken = (user: any)=> {
-    const id:string = user;
+    const id: string = user;
+    const secret: any = process.env.JWT_SECRET
    
-    const token =  jwt.sign({
-        id: id
-    },
-    key, {algorithm: "RS256"});
+    const token =  jwt.sign(id, secret);
     console.log(token);
     return token;
 }

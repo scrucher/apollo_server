@@ -1,36 +1,32 @@
 import { Service } from "typedi";
-import * as crypto from "crypto";
-import { v4 } from "uuid";
-import GenerateToken from "../Utilities/GenerateTK";
-import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
-import { SubCategoryModel, SubCategory} from "./SubCategory.model";
+import { InternalServerError } from "routing-controllers";
+import { SubCategoryModel, SubCategory } from "./SubCategory.model";
 import { SubCategoryInput } from "./SubCategory.input";
+import { Context } from "apollo-server-core";
+import { SubCategoryArgs } from "./SubCategory.args";
+
 
 @Service('SubCategory_Service')
 export class SubCategoryService {
 
-    async CreateProduct(subCategoryInput: SubCategoryInput): Promise <SubCategory> {
-        const { product_name, description, details, images, price  } = subCategoryInput;
-
-        const sub_category = new SubCategoryModel();
-        sub_category.product_name = product_name;
-        sub_category.description = description
-        sub_category.details = details;
-        sub_category.images = images;
-        sub_category.price = price;
+    async CreateCategory(subCategoryInput: SubCategoryInput, context: Context): Promise<SubCategory> {
+        // const { sub_category_name } = subCategoryInput;
+        // const user_id = context._id;
+        // const SubCategory = new SubCategoryModel();
+        // SubCategory.sub_category_name = sub_category_name;
         let saved;
         try {
-            saved = await SubCategoryModel.create(sub_category)
+            saved = await SubCategoryModel.create(subCategoryInput)
         } catch (err) {
             console.log(err);
-            throw new InternalServerError("Cannot Save Product");
+            throw new InternalServerError("Cannot Save SubCategory");
         }
         console.log(saved);
         return saved;
     }
 
 
-    async getAllProducts():Promise <SubCategory[]> {
+    async GetAllCategories(): Promise<SubCategory[]> {
         let found;
         try {
             found = await SubCategoryModel.find()
@@ -42,45 +38,49 @@ export class SubCategoryService {
         return found;
     }
 
-    async getProductById(_id: string): Promise<SubCategory> {
-        const found = await SubCategoryModel.findById(_id)
-            .then((data: any) => {
-                return data
-            })
-            .catch((err: Error) => {
-                console.log(err);
-                return ("Internal Server error");
-            })
-
+    async GetCategoryById(categoryArgs: SubCategoryArgs): Promise<SubCategory> {
+        const _id = categoryArgs;
+        let found: any;
+        try {
+            found = await SubCategoryModel.findById(_id)
+        } catch (err) {
+            console.log(err);
+            throw new InternalServerError('Internal Server Error');
+        }
         return found;
-
     }
 
-    // async deleteStore(): Promise<void> {
-    //     // const id =""
-    //     // const deleted = await ProductModel.deleteOne()
-    //     //     .then((data: any) => {
-    //     //         return data
-    //     //     })
-    //     //     .catch((err: Error) => {
+    async DeleteCategory(categoryArgs: SubCategoryArgs): Promise<String> {
+        const _id = categoryArgs;
+        try {
+            await SubCategoryModel.deleteOne(_id);
+        } catch (err) {
+            console.log(err);
+            throw new InternalServerError('Internal Server Error');
+        }
+        return ("SubCategory Deleted Successfully");
+    }
 
-    //     // return deleted;
 
-    // }
-    // async updateStore(prodctInput: ProductInput):Promise<Product> {
-    //     // const data = {};
-    //     // const id = ""
-    //     // const updated = await ProductModel.update(filter: "")
-    //     //     .then((data: any) => {
-    //     //         return data
-    //     //     })
-    //     //     .catch((err: Error) => {
-    //     //         console.log(err);
-    //     //         return ("Internal Server error");
-    //     //     })
+    async updateCategory(
+        subCategoryInput: SubCategoryInput,
+        categoryArgs: SubCategoryArgs
+    ): Promise<SubCategory> {
 
-    //     // return updated;
-
-    // }
+        const _id = categoryArgs;
+        const update = subCategoryInput;
+        let updated: any;
+        try {
+            updated = await SubCategoryModel.findOneAndUpdate({
+                where: _id
+            }, update, {
+                returnOriginal: false
+            });
+        } catch (err) {
+            console.log(err);
+            throw new InternalServerError('Internal Server Error');
+        }
+        return updated;
+    }
 
 }

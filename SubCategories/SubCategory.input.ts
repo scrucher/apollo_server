@@ -1,6 +1,6 @@
 
 import { MaxLength } from "class-validator";
-import { ArgsType, Field, ID, Int, ObjectType, } from "type-graphql";
+import { ArgsType, Field, ID, ObjectType, } from "type-graphql";
 
 
 @ArgsType()
@@ -10,23 +10,10 @@ export class SubCategoryInput{
     @Field(() => String)
     @MaxLength(30)
 
-    product_name?: string;
+    sub_category_name?: string;
 
-    @Field(() => String)
+    @Field(() => ID)
     @MaxLength(30)
-    description?: string;
 
-    @Field(() => String)
-    @MaxLength(30)
-    details?: string;
-
-    @Field(() => String)
-    @MaxLength(30)
-    images?: string;
-
-    @Field(() => String)
-    @MaxLength(30)
-    price?: string;
-
-
+    category_id?: string;
 }

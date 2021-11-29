@@ -7,9 +7,9 @@ import { buildSchema } from "type-graphql";
 import Container from "typedi";
 import express from "express";
 import { GoogleAuth } from "./Config/google.auth";
-import { IsAuthorized } from "./Utilities/IsAuthorized";
-import { Context } from "apollo-server-core";
+import jwt from "jsonwebtoken";
 import { customAuthChecker } from "./Utilities/custom-auth-check";
+import { IsAuthorized } from "./Utilities/IsAuthorized";
 
 dotenv.config();
 
@@ -18,7 +18,6 @@ dotenv.config();
 async function App() {
     const app = express();
     const port = process.env.PORT;
-    // app.use(IsAuthorized)
     const schema = await buildSchema({
         resolvers: [__dirname + "/**/*.resolver.{ts,js}"],
         container: Container,
@@ -26,8 +25,10 @@ async function App() {
     });
     const apolloServer = new ApolloServer({
         schema,
-        context: ({ req }) => {
+        context: async ({ req }) => {
+            const user = await IsAuthorized(req)
             const context = {
+                
                 req,
                 //@ts-ignore
                 user: req.user, // `req.user` comes from `express-jwt`

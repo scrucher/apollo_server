@@ -9,10 +9,6 @@ import { Product } from "../Products/Product.model";
 export class Store extends Schema {
 
     @Field(() => ID)
-    @prop({
-        type: String,
-    })
-    //@ts-ignore
     _id: string;
 
     @Field(() => String)
@@ -55,21 +51,6 @@ export class Store extends Schema {
     @prop()
     image?: string
 
-    @Field(() => String)
-    @prop({
-        type: String,
-        enum: ["STORE", "DRIVER", "VISITOR"],
-        default: "VISITOR",
-    })
-    role?: string
-
-    @Field(() => Boolean || null)
-    @prop({
-        type: Boolean || null ,
-        enum: [false, true],
-        addNullToEnum: true,
-    })
-    IsActive?: boolean
 
     @Field(() => String)
     token: string

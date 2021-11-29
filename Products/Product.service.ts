@@ -11,7 +11,8 @@ export class ProductService {
 
     async CreateProduct(productInput: ProductInput, context: Context): Promise <Product> {
         const { product_name, description, details, images, price } = productInput;
-        console.log({"context": context})
+        //@ts-ignore
+        console.log({ "context": context.user })
         //@ts-ignore
         const store_id = context._id
         console.log({"id ": store_id})

@@ -1,83 +1,46 @@
-import { Request, Response, NextFunction } from "express";
-import DecodeToken from "./decode_token";
-import { UserModel } from "../Users/Users.model";
+import { InternalServerError } from "routing-controllers";
+import { AuthChecker, UnauthorizedError } from "type-graphql";
 import { AdminModel } from "../Admins/Admin.model";
-import { InternalServerError, HttpError } from "routing-controllers";
+import { StoreModel } from "../Store/Store.model";
+import { UserModel } from "../Users/Users.model";
+import DecodeToken from "./decode_token";
 
-
-export const IsAuthorized = async (req: Request, res: Response, next: NextFunction) => {
+export const IsAuthorized = async (req: any) => {
+    console.log(req.headers.authorization)
     //@ts-ignore
-    const token: string = req.headers.authorization?.split(' ')[1];
-
-    //@ts-ignore
-    const id = DecodeToken(token)
-    const admin = await AdminModel.findById(id)
-        .catch(err => {
-        console.log(err);
-        throw new InternalServerError("Internal Server Error");
-    })
-    const user = await UserModel.findById(id)
+    const token = req.headers.authorization
+    // here we can read the user from context
+    const email = DecodeToken(token)
+    console.log(id)
+    // and check his permission in the db against the `roles` argument
+    const store = await StoreModel.findOne({email})
         .catch(err => {
             console.log(err);
             throw new InternalServerError("Internal Server Error");
         })
-    
-    // const store = await UserModel.findById(id)
+    if (store) return store;
+
+    const user = await UserModel.findOne({ email })
+        .catch(err => {
+            console.log(err);
+            throw new InternalServerError("Internal Server Error");
+        })
+    if (user) return user;
+
+    const admin = await AdminModel.findOne({ email })
+        .catch(err => {
+            console.log(err);
+            throw new InternalServerError("Internal Server Error");
+        })
+    if (admin) return admin;
+
+    // const driver = await UserModel.findOne({email})
     //     .catch(err => {
     //         console.log(err);
     //         throw new InternalServerError("Internal Server Error");
     //     })
-    
-    // const driver = await UserModel.findById(id)
-    //     .catch(err => {
-    //         console.log(err);
-    //         throw new InternalServerError("Internal Server Error");
-    //     })
-    
-    // if (admin || user || store || driver) {
-    //     // const auths = [admin, user, store, driver]
-    //     // for (const auth in auths) {
-    //     //     switch (auth) {
 
-    //     //         case admin:
-    //     //             //@ts-ignore
-    //     //             req.admin = admin;
-    //     //             next()
-    //     //             break;
-            
-    //     //         case user:
-    //     //             //@ts-ignore
-    //     //             req.user = user;
-    //     //             next();
-    //     //             break;
+    // that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
 
-    //     //         case store:
-    //     //             //@ts-ignore
-    //     //             req.store = store;
-    //     //             next();
-    //     //             break;
-
-    //     //         case driver:
-    //     //             //@ts-ignore
-    //     //             req.deriver = driver;
-    //     //             next();
-    //     //             break;
-
-    //     // }
-    //     // }
-
-
-        //@ts-ignore
-
-        req.user = user ;
-        next();
-        
-    // } else {
-    //     throw new HttpError(401, "Unauthorized");
-    // }
-    
-
-
-}
-
-
+   throw new UnauthorizedError()
+};

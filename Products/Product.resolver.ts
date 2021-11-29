@@ -1,4 +1,4 @@
-import { Args, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import { Args, Ctx, Mutation, Query, Resolver, Authorized} from "type-graphql";
 import { Inject, Service } from "typedi";
 import { ProductInput } from "./Product.input";
 import { ProductArgs } from "./Product.args"
@@ -32,8 +32,9 @@ export class ProductResolver {
     @Mutation(returns => Product, {nullable: true})
     //@ts-ignore
     async CreateProduct(@Args("productInput") productInput: ProductInput, @Ctx() context: Context, req: Request) {
-        console.log ({"req": req})
-        console.log(context);
+        console.log({ "req": req })
+        //@ts-ignore
+        console.log(context.req);
         return await this.productService.CreateProduct(productInput, context)
     }
 
