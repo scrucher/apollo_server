@@ -4,6 +4,8 @@ import { ProductModel, Product } from "./Product.model";
 import { ProductInput } from "./Product.input";
 import { ProductArgs } from "./Product.args";
 import { Context } from "apollo-server-core";
+import { StoreModel } from "../Store/Store.model";
+import { mongoose } from "@typegoose/typegoose";
 
 
 @Service('Product_Service')
@@ -12,26 +14,29 @@ export class ProductService {
     async CreateProduct(productInput: ProductInput, context: Context): Promise <Product> {
         const { product_name, description, details, images, price } = productInput;
         //@ts-ignore
-        console.log({ "context": context.user })
+        console.log({ "context": context.user._id })
         //@ts-ignore
-        const store_id = context._id
-        console.log({"id ": store_id})
+        const store_id : mongoose.Types.ObjectId = context.user._id
+        console.log({ "id ": store_id})
+        // const store = await StoreModel.findById(store_id)
+        // console.log(store)
         const product = new ProductModel();
         product.product_name = product_name;
         product.description = description
         product.details = details;
-        //@ts-ignore
         product.images = images;
         product.price = price;
-        product.user = store_id;
+        //@ts-ignore
+        // product.store_id = store_id;
         let saved;
         try {
-            saved = await ProductModel.create(product)
+            saved = await ProductModel.create(product);
+
         } catch (err) {
             console.log(err);
             throw new InternalServerError("Cannot Save Product");
         }
-        console.log(saved);
+        // console.log(saved.store_id);
         return saved;
     }
 
@@ -39,7 +44,7 @@ export class ProductService {
     async getAllProducts():Promise <Product[]> {
         let found;
         try {
-            found = await ProductModel.find()
+            found = await ProductModel.find().populate("")
         } catch (err) {
             console.log(err);
             throw new InternalServerError('Internal Server Error');

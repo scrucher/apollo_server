@@ -26,9 +26,10 @@ async function App() {
     const apolloServer = new ApolloServer({
         schema,
         context: async ({ req }) => {
-            const user = await IsAuthorized(req)
+            const user = await IsAuthorized(req);
+            //@ts-ignore
+            req.user = user
             const context = {
-                
                 req,
                 //@ts-ignore
                 user: req.user, // `req.user` comes from `express-jwt`

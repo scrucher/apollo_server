@@ -35,9 +35,8 @@ export class StoreInput{
     @MaxLength(30)
     city?: string
 
-    @Field(() => [String])
-    @MaxLength(30)
-    image?: string[]
+    @Field(() => String)
+    image?: string
 
     @Field(() => String)
     @MaxLength(30)

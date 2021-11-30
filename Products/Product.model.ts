@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { Field, ID, Int, ObjectType, } from "type-graphql";
-import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
-import { User } from "../Users/Users.model";
+import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { Store, StoreModel } from "../Store/Store.model";
 
 
 
@@ -38,10 +38,12 @@ export class Product extends Schema {
 
     @Field(() => ID)
     @prop({
-        type: mongoose.Types.ObjectId,
-        ref: "Store"
+        ref: Store,
+        foreignField: "store_id",
+        localField: "_id",
+        justOne: false,
     })
-    user?: string;
+    store_id?: Ref<Store>;
 
 
 

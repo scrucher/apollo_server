@@ -67,7 +67,7 @@ export class UserService {
         //@ts-ignore
         const pswd = await crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString('hex');
         if (user && pswd === user.password) {
-            const token = GenerateToken(user.email);
+            const token = GenerateToken(user._id);
             return ({user, token: token });
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")

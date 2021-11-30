@@ -6,6 +6,7 @@ import { v4 } from "uuid";
 import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
 import { StoreLoginInput } from "./StoreLogin.input";
+import { StorePayload } from "./Store.payload";
 
 @Service('Store_Service')
 export class StoreService {
@@ -25,7 +26,6 @@ export class StoreService {
             throw new InternalServerError("Account Already Exist")
         } else {
             const store = new StoreModel;
-            store._id =  v4();
             store.store_name = store_name;
             store.salt = crypto.randomBytes(16).toString('hex')
             //@ts-ignore
@@ -44,10 +44,15 @@ export class StoreService {
                     console.log(err);
                     throw new InternalServerError("Account Already Exist")
                 })
-            const token = GenerateToken(saved._id)
+                console.log({"id" : saved._id})
+            const payload: StorePayload = {
+                //@ts-ignore
+                username: saved.store_name,
+                //@ts-ignore
+                email: saved.email
+                }
+            const token = GenerateToken(payload)
             return ({data:saved, token: token});
-            
-
         }
     }
 
@@ -62,10 +67,17 @@ export class StoreService {
         console.log(store)
         if (!store) throw new NotFoundError("Store Not Found")
         const salt = store.salt
+        console.log(store._id)
         //@ts-ignore
         const pswd = await crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString('hex');
         if (store && pswd === store.password) {
-            const token = GenerateToken(store._id);
+            const payload: StorePayload = {
+                //@ts-ignore
+                username: store.store_name,
+                //@ts-ignore
+                email: store.email
+            }
+            const token = GenerateToken(payload);
             return ({store, token: token });
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")

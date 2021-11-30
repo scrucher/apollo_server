@@ -1,13 +1,18 @@
 import { Schema } from "mongoose";
 import { Authorized, Field, ObjectType, ID } from "type-graphql";
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
+import { v4 } from "uuid";
 
 
 
 @ObjectType()
 export class User extends Schema {
 
-   @Field(() => ID)
+    @Field(() => String)
+    @prop({
+        type: String,
+        default: v4(),
+    })
    _id: string
 
     @Field(() => String)
@@ -51,14 +56,6 @@ export class User extends Schema {
         typre: Array
     })
     image?: string
-
-    @Field(() => Boolean || null)
-    @prop({
-        type: Boolean || null ,
-        enum: [false, true],
-        addNullToEnum: true,
-    })
-    IsActive?: boolean
 
     @Field(() => String)
     token: string
