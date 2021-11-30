@@ -1,15 +1,21 @@
 import { Schema } from "mongoose";
 import { Authorized, Field, ID, ObjectType, } from "type-graphql";
-import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
+import { getModelForClass, mongoose, prop, Ref } from "@typegoose/typegoose";
 import { Product } from "../Products/Product.model";
+import { v4 } from "uuid";
 
 
 
 @ObjectType()
 export class Store extends Schema {
 
-    @Field(() => ID)
-    _id: string;
+    // @Field(() => ID)
+    // @prop({
+    //     type: mongoose.Types.ObjectId,
+    //     default: v4(),
+    // })
+    // _id: mongoose.Types.ObjectId;
+
 
     @Field(() => String)
     @prop()
@@ -57,10 +63,13 @@ export class Store extends Schema {
 
     @Field(() => ID)
     @prop({
-        type: mongoose.Types.ObjectId,
-        ref: "Product"
+        type: mongoose.Types.ObjectId  ,
+        ref: Product,
+        foreignField: "products",
+        localField: "_id",
+        justOne: false,
     })
-    product?: Product[];
+    public products: Ref<Product>;
 
     @Authorized("STORE")
     @Field({ nullable: true })

@@ -35,8 +35,8 @@ export class UserInput{
     @MaxLength(30)
     city?: string
 
-    @Field(() => [String])
-    image?: string[]
+    @Field(() => String)
+    image?: string
 
     @Field(() => String)
     @MaxLength(30)

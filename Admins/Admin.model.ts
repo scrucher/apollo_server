@@ -1,14 +1,20 @@
 import { Schema } from "mongoose";
 import { Authorized, Field, ID, Int, ObjectType, } from "type-graphql";
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { v4 } from "uuid";
 
 
 
 @ObjectType()
 export class Admin extends Schema {
 
-    @Field(() => ID)
-    _id: string;
+    @Field(() => String)
+    @prop({
+        type: String,
+        default: v4(),
+    })
+    _id: string
+
 
     @Field(() => String)
     @prop()
