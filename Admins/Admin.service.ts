@@ -9,11 +9,10 @@ import { AdminLoginInput } from "./AdminLogin.input";
 
 @Service('Admin_Service')
 export class AdminService {
-    async CreateStore(adminInput: AdminInput){
+    async CreateAdmin(adminInput: AdminInput){
         const { user_name,
             email,
             phone,
-            role,
             password } = adminInput;
         const found = await AdminModel.findOne({ email })
         if (found?.email === email) {
@@ -27,7 +26,6 @@ export class AdminService {
             admin.password = crypto.pbkdf2Sync(password, admin.salt, 1000, 64, "sha512").toString('hex');
             admin.email = email;
             admin.phone = phone;
-            admin.role = role;
             const saved = await AdminModel.create(admin)
                 .then(data => data)
                 .catch(err => {
@@ -41,7 +39,7 @@ export class AdminService {
         }
     }
 
-    async StoreLogin(adminLoginInput: AdminLoginInput) {
+    async AdminLogin(adminLoginInput: AdminLoginInput) {
         const { email, password } = adminLoginInput;
         const user = await AdminModel.findOne({ email })
             .then(data => data)

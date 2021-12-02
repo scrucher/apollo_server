@@ -10,7 +10,7 @@ import { UserLoginInput } from "./UsersLogin.input";
 @Service('User_Service')
 export class UserService {
     async CreateStore(storeInput : UserInput){
-        const { store_name,
+        const { username,
             email,
             phone,
             city,
@@ -27,7 +27,7 @@ export class UserService {
             throw new InternalServerError("Account Already Exist")
         } else {
             const user = new UserModel;
-            user.store_name = store_name;
+            user.username = username;
             user.salt = crypto.randomBytes(16).toString('hex')
             //@ts-ignore
             user.password = crypto.pbkdf2Sync(password, user.salt, 1000, 64, "sha512").toString('hex');

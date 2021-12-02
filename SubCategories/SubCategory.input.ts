@@ -1,11 +1,12 @@
 
+import { mongoose } from "@typegoose/typegoose";
 import { MaxLength } from "class-validator";
-import { ArgsType, Field, ID, ObjectType, } from "type-graphql";
+import { ArgsType, Field, ID, InputType, ObjectType, } from "type-graphql";
 
 
 @ArgsType()
-@ObjectType()
-export class SubCategoryInput{
+@InputType()
+export class SubCategoryInput {
 
     @Field(() => String)
     @MaxLength(30)
@@ -15,5 +16,6 @@ export class SubCategoryInput{
     @Field(() => ID)
     @MaxLength(30)
 
-    category_id?: string;
+    category_id?: mongoose.Types.ObjectId;
 }
+

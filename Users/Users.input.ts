@@ -9,7 +9,7 @@ export class UserInput{
     @Field(() => String)
     @MaxLength(30)
 
-    store_name?: string;
+    username?: string;
 
     @Field(() => String)
     @MaxLength(30)

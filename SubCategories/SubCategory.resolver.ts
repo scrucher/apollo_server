@@ -13,25 +13,25 @@ import { SubCategoryService } from "./SubCategory.service";
 export class SubCategoryResolver {
 
     constructor(
-        @Inject('Category_Service') private subCategorytService: SubCategoryService,
+        @Inject('SubCategory_Service') private subCategorytService: SubCategoryService,
     ) { }
 
-    @Query(returns => [SubCategory])
+    @Query(returns => [SubCategory], { nullable: true })
     async GetSubCategories(): Promise<SubCategory[]> {
         const data = await this.subCategorytService.GetAllCategories()
         return data;
     }
-    @Query(returns => SubCategory)
+    @Query(returns => SubCategory, { nullable: true })
     async GetSubCategoryById( @Args() subCategoryArgs: SubCategoryArgs):Promise<SubCategory>{
       return await this.subCategorytService.GetCategoryById(subCategoryArgs);
     }
 
 
 
-    @Mutation(returns => SubCategory)
+    @Mutation(returns => SubCategory, { nullable: true })
     //@ts-ignore
     async CreateSubCategory(@Args("subCategoryInput") subCategoryInput: SubCategoryInput, @Ctx() context: Context) {
-        return await this.subCategorytService.CreateCategory(subCategoryInput, context)
+        return await this.subCategorytService.CreateSubCategory(subCategoryInput, context)
     }
 
     @Mutation(returns => SubCategory, {nullable: true})
@@ -42,7 +42,7 @@ export class SubCategoryResolver {
         return await this.subCategorytService.updateCategory(subCategoryInput, subCategoryArgs)
     }
 
-    @Mutation(returns => SubCategory)
+    @Mutation(returns => SubCategory ,{nullable: true})
     async DeleteSubCategory(
         @Args() subCategoryArgs: SubCategoryArgs
     ) {

@@ -1,15 +1,16 @@
 import "reflect-metadata";
 import mongoose from "mongoose";
-import {  DbUrl } from "./Config/auth.config.";
+import {  DbUrl } from "./Google/auth.config.";
 import * as dotenv from "dotenv";
 import { ApolloServer} from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import Container from "typedi";
 import express from "express";
-import { GoogleAuth } from "./Config/google.auth";
+import { GoogleAuth } from "./Google/google.auth";
 import jwt from "jsonwebtoken";
 import { customAuthChecker } from "./Utilities/custom-auth-check";
 import { IsAuthorized } from "./Utilities/IsAuthorized";
+import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageProductionDefault } from "apollo-server-core";
 
 dotenv.config();
 
@@ -25,14 +26,19 @@ async function App() {
     });
     const apolloServer = new ApolloServer({
         schema,
+        plugins: [
+            process.env.NODE_ENV === "production"
+                ? ApolloServerPluginLandingPageProductionDefault()
+                : ApolloServerPluginLandingPageGraphQLPlayground(),
+        ],
         context: async ({ req }) => {
-            const user = await IsAuthorized(req);
-            //@ts-ignore
-            req.user = user
+            // const user = await IsAuthorized(req);
+            // //@ts-ignore
+            // req.user = user
             const context = {
-                req,
-                //@ts-ignore
-                user: req.user, // `req.user` comes from `express-jwt`
+                // req,
+                // //@ts-ignore
+                // user: req.user, // `req.user` comes from `express-jwt`
             };
             return context;
         },

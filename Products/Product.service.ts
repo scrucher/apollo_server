@@ -1,10 +1,9 @@
 import { Service } from "typedi";
-import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
+import { InternalServerError} from "routing-controllers";
 import { ProductModel, Product } from "./Product.model";
 import { ProductInput } from "./Product.input";
 import { ProductArgs } from "./Product.args";
 import { Context } from "apollo-server-core";
-import { StoreModel } from "../Store/Store.model";
 import { mongoose } from "@typegoose/typegoose";
 
 
@@ -12,22 +11,23 @@ import { mongoose } from "@typegoose/typegoose";
 export class ProductService {
 
     async CreateProduct(productInput: ProductInput, context: Context): Promise <Product> {
-        const { product_name, description, details, images, price } = productInput;
+        const { product_name, description, details, images, price, category_id, subCategory_id } = productInput;
         //@ts-ignore
         console.log({ "context": context.user._id })
         //@ts-ignore
         const store_id : mongoose.Types.ObjectId = context.user._id
         console.log({ "id ": store_id})
-        // const store = await StoreModel.findById(store_id)
-        // console.log(store)
         const product = new ProductModel();
         product.product_name = product_name;
         product.description = description
         product.details = details;
         product.images = images;
         product.price = price;
+        product.store_id = store_id;
         //@ts-ignore
-        // product.store_id = store_id;
+        product.category_id = category_id;
+        //@ts-ignore
+        product.subCategory_id = subCategory_id
         let saved;
         try {
             saved = await ProductModel.create(product);
@@ -36,7 +36,6 @@ export class ProductService {
             console.log(err);
             throw new InternalServerError("Cannot Save Product");
         }
-        // console.log(saved.store_id);
         return saved;
     }
 
@@ -67,7 +66,7 @@ export class ProductService {
 
     }
 
-    async DeleteProduct(id: string): Promise<void> {
+    async DeleteProduct(id: string): Promise<void | any> {
         const _id = id
         let deleted;
         try {
@@ -76,11 +75,11 @@ export class ProductService {
             console.log(err);
             throw new InternalServerError("Internal Server Error");
         }
-        
-
-        // return deleted;
-
+        if (deleted.deletedCount === 0) {
+            return ("Product Deleted Successfully")
+        }
     }
+    
     async UpdateProduct(prodctInput: ProductInput, productArgs: ProductArgs): Promise<void> {
         const {_id} = productArgs 
         const update = ProductInput;

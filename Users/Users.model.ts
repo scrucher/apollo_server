@@ -18,7 +18,7 @@ export class User extends Schema {
     @Field(() => String)
     @prop()
     
-    store_name?: string;
+    username?: string;
 
     @Field(() => String)
     @prop()
