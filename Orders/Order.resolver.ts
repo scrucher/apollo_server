@@ -1,5 +1,9 @@
+import { Context } from "apollo-server-core";
+import { Ctx } from "routing-controllers";
 import { Args, Mutation, Query, Resolver} from "type-graphql";
+import { ContextParamMetadata } from "type-graphql/dist/metadata/definitions";
 import { Inject, Service } from "typedi";
+import { OrderArgs } from "./Order.args";
 import { OrderInput } from "./Order.input";
 import { Order } from "./Order.model";
 import { OrderService } from "./Order.service";
@@ -33,9 +37,18 @@ export class OrderResolver {
         return await this.productService.CreateOrder(storeInput)
     }
 
-    // @Mutation(returns => Order)
-    // async StoreLogin() {
-    //     return await this.productService.StoreLogin(storeLoginInput);
-    //}
+    @Mutation(returns => Order, { nullable: true })
+    async UpdateProduct(@Args({ validate: false }) orderInput: OrderInput,
+        @Args() orderArgs: OrderArgs) {
+        return await this.productService.UpdateOrder(orderInput, orderArgs);
+    }
+
+    @Mutation(returns => Order, { nullable: true })
+    async DeleteProduct(@Args({ validate: false }) orderArgs: OrderArgs,
+        @Ctx() context: Context) {
+        console.log(context)
+        return await this.productService.DeleteOrder(orderArgs, context);
+    }
+
 
 }

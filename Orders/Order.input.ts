@@ -1,32 +1,18 @@
+import { mongoose } from "@typegoose/typegoose";
+import { Field, ID, InputType } from "type-graphql";
 
-import { MaxLength } from "class-validator";
-import { ArgsType, Field, ID, Int, ObjectType, } from "type-graphql";
 
-
-@ArgsType()
-@ObjectType()
+@InputType()
 export class OrderInput{
 
     @Field(() => String)
-    @MaxLength(30)
 
-    product_name?: string;
+    total_price: string
 
-    @Field(() => String)
-    @MaxLength(30)
-    description?: string;
+    @Field(() => [ID])
+   products: mongoose.Types.ObjectId;
 
-    @Field(() => String)
-    @MaxLength(30)
-    details?: string;
-
-    @Field(() => String)
-    @MaxLength(30)
-    images?: string;
-
-    @Field(() => String)
-    @MaxLength(30)
-    price?: string;
-
+    @Field(() => ID)
+   store: mongoose.Types.ObjectId;
 
 }

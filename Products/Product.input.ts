@@ -31,5 +31,11 @@ export class ProductInput{
     @MaxLength(30)
     price?: string;
 
+    @Field(() => ID)
+    subCategory_id: mongoose.Types.ObjectId;
+
+    @Field(()=> ID)
+    category_id: mongoose.Types.ObjectId;
+
 
 }

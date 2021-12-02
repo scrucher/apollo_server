@@ -64,7 +64,7 @@ export class Store extends Schema {
     @Field(() => ID)
     @prop({
         type: mongoose.Types.ObjectId  ,
-        ref: Product,
+        ref:"ProductModel",
         foreignField: "products",
         localField: "_id",
         justOne: false,

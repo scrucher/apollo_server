@@ -1,8 +1,8 @@
 import { Args, Mutation, Query, Resolver } from "type-graphql";
 import { Inject, Service } from "typedi";
-import { GoogleAuth } from "../Config/google.auth";
-import { GoogleInput } from "../Config/Google.input";
-import { Google } from "../Config/Google.type";
+import { GoogleAuth } from "../Google/google.auth";
+import { GoogleInput } from "../Google/Google.input";
+import { Google } from "../Google/Google.type";
 import { StoreInput } from "./Store.input";
 import { Store } from "./Store.model"
 import { StoreService } from "./Store.service";

@@ -1,8 +1,9 @@
 import { Schema } from "mongoose";
 import { Field, ID, Int, ObjectType, } from "type-graphql";
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, mongoose, prop, Ref } from "@typegoose/typegoose";
 import { Store, StoreModel } from "../Store/Store.model";
-
+import { Category } from "../Categories/Category.model";
+import { SubCategory } from "../SubCategories/SubCategory.model";
 
 
 @ObjectType()
@@ -36,17 +37,16 @@ export class Product extends Schema {
     })
     price?: string;
 
-    @Field(() => ID)
-    @prop({
-        ref: Store,
-        foreignField: "store_id",
-        localField: "_id",
-        justOne: false,
-    })
-    store_id?: Ref<Store>;
+    @prop({ ref: "StoreModel"})
+    public store_id: Ref<Store>;
 
+    @prop({ ref: "CategoryModel" })
+    public category_id: Ref<Category>;
+
+    @prop({ ref: "SubCategoryModel" }) 
+    public subCategory_id: Ref<SubCategory>;
 
 
 }
 
-export const ProductModel = getModelForClass(Product, { schemaOptions: { timestamps: true } })
+export const ProductModel = getModelForClass(Product)

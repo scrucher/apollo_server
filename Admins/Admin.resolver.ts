@@ -20,12 +20,12 @@ export class AdminResolver {
     @Mutation(returns => Admin)
         //@ts-ignore
     async CreateAdmin(@Args("adminInput") adminInput: AdminInput){
-        return await this.adminService.CreateStore(adminInput)
+        return await this.adminService.CreateAdmin(adminInput)
     }
 
     @Mutation(returns => Admin)
     async AdminLogin(@Args() adminLoginInput: AdminLoginInput) {
-        return await this.adminService.StoreLogin(adminLoginInput);
+        return await this.adminService.AdminLogin(adminLoginInput);
     }
 
 }
