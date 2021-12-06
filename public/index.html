@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Dmitri Voronianski">
+	<title>Real-Time Geolocation Service with Node.js</title>
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+	<script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=KEY"></script>
+	<script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=KEY"></script>
+
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div class="wrapper">
+	  <header>
+	  	<h1>Real-Time Geolocation Service with Node.js</h1>
+	  	<div class="description">Using the HTML5 Geolocation API and Web Sockets to show the locations of visitors in real-time.</div>
+	  </header>
+
+	  <div class="app">
+	  	<div id="infobox" class="infobox"></div>
+	  	<div id="map">To get this app to work you need to share your geolocation.</div>
+	  </div>
+	</div>
+
+	<script>
+		var htmlMAP = document.getElementById(map);
+		var map,
+				dir;
+
+			map = L.map('map', {
+				layers: MQ.mapLayer(),
+				center: [38.895345, -77.030101],
+				zoom: 15
+			});
+
+			dir = MQ.routing.directions();
+
+			dir.route({
+				locations: [
+					'1600 pennsylvania ave, washington dc',
+					'935 pennsylvania ave, washington dc'
+				]
+			});
+
+			map.addLayer(MQ.routing.routeLayer({
+				directions: dir,
+				fitBounds: true
+			}));
+			htmlMAP.append(map);
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="./js/lib/leaflet.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="./js/application.js"></script>
+</body>
+</html>

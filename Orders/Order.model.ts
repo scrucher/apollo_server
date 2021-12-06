@@ -39,6 +39,8 @@ export class Order extends Schema {
     @prop({ref: "StoreModel"})
     public store: Ref<Store>
 
+    @prop({ ref: "DriverModel" })
+    public driver: Ref<Store>
 
 
 

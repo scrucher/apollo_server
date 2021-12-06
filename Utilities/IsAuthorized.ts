@@ -52,6 +52,6 @@ export const IsAuthorized = async (req: any) => {
     //     })
 
     // that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
-    return 
+    throw new UnauthorizedError();
 
 };
