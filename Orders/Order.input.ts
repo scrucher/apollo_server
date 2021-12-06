@@ -1,13 +1,9 @@
 import { mongoose } from "@typegoose/typegoose";
-import { Field, ID, InputType } from "type-graphql";
+import {ArgsType, Field, ID, InputType } from "type-graphql";
 
-
+@ArgsType()
 @InputType()
 export class OrderInput{
-
-    @Field(() => String)
-
-    total_price: string
 
     @Field(() => [ID])
    products: mongoose.Types.ObjectId;

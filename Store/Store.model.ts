@@ -71,6 +71,16 @@ export class Store extends Schema {
     })
     public products: Ref<Product>;
 
+    @Field(() => ID)
+    @prop({
+        type: mongoose.Types.ObjectId,
+        ref: "LocationModel",
+        foreignField: "location",
+        localField: "_id",
+        justOne: false,
+    })
+    public location: Ref<Location>;
+
     @Authorized("STORE")
     @Field({ nullable: true })
     hiddenField?: string;

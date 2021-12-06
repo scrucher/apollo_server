@@ -33,8 +33,8 @@ export class OrderResolver {
 
     @Mutation(returns => Order)
     //@ts-ignore
-    async CreateOrder(@Args("storeInput") storeInput: OrderInput) {
-        return await this.productService.CreateOrder(storeInput)
+    async CreateOrder(@Args("storeInput") storeInput: OrderInput, context: Context) {
+        return await this.productService.CreateOrder(storeInput, context)
     }
 
     @Mutation(returns => Order, { nullable: true })

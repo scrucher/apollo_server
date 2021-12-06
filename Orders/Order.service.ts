@@ -14,8 +14,7 @@ export class OrderService {
     async CreateOrder(orderInput: OrderInput, context: Context): Promise<Order> {
         const user = "";
         const order = new OrderModel();
-        order.total_price = orderInput.total_price;
-        //ts-ignore
+        //@ts-ignore
         order.products = orderInput.products;
         order.store = orderInput.store;
         order.client = user
@@ -58,7 +57,7 @@ export class OrderService {
 
     }
 
-    async DeleteOrder(orderArgs: OrderArgs): Promise<void | any> {
+    async DeleteOrder(orderArgs: OrderArgs, context : Context): Promise<void | any> {
         const _id = orderArgs;
         let deleted;
         try {
@@ -77,6 +76,7 @@ export class OrderService {
         const update = orderInput;
         let updated: any;
         try {
+            //@ts-ignore
             updated = await OrderModel.update({_id: _id}, update, {
                 upsert: true,
             });
