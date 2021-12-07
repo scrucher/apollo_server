@@ -20,85 +20,77 @@
     </style>
 
     <div id="map"></div>
-        <script>
-            // var map = L.map('map').setView([51.505, -0.09], 13);
-            // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            //     maxZoom: 18,
-            //     id: 'mapbox/streets-v11',
-            //     tileSize: 512,
-            //     zoomOffset: -1,
-            //     accessToken: 'pk.eyJ1Ijoic2NydWNoZXIiLCJhIjoiY2t3dW5tYnNlMXM1MTJxdXMwb3BlZWJmYiJ9.2iqhSE1FU68zhi4MgrsFwgyour.mapbox.access.token'
-            // }).addTo(map);
-            // var marker = L.marker([51.5, -0.09]).addTo(map);
-            // var circle = L.circle([51.508, -0.11], {
-            //         color: 'red',
-            //         fillColor: '#f03',
-            //         fillOpacity: 0.5,
-            //         radius: 500
-            //     }).addTo(map);
+    <script>
+        let lat;
+            let lon;
 
-            //     var polygon = L.polygon([
-            //             [51.509, -0.08],
-            //             [51.503, -0.06],
-            //             [51.51, -0.047]
-            //         ]).addTo(map);
-                mapboxgl.accessToken = 'pk.eyJ1Ijoic2NydWNoZXIiLCJhIjoiY2t3dW5tYnNlMXM1MTJxdXMwb3BlZWJmYiJ9.2iqhSE1FU68zhi4MgrsFwg';
-                    var map = new mapboxgl.Map({
-                        container: 'map',
-                        // center: [-122.486052, 37.830348],
-                        style: 'mapbox://styles/mapbox/streets-v11'
-                    });
+                navigator.geolocation.getCurrentPosition(position => {
+                    lat = position.coords.latitude;
+                    lon = position.coords.longitude;
+                    console.log(lat, lon);
+                    document.getElementById('latitude').textContent = lat;
+                    document.getElementById('longitude').textContent = lon;
 
-                map.on('load', () => {
-                        map.addSource('route', {
-                            'type': 'geojson',
-                            'data': {
-                                'type': 'Feature',
-                                'properties': {},
-                                'geometry': {
-                                    'type': 'LineString',
-                                    'coordinates': [
-                                        [-122.483696, 37.833818],
-                                        [-122.483482, 37.833174],
-                                        [-122.483396, 37.8327],
-                                        [-122.483568, 37.832056],
-                                        [-122.48404, 37.831141],
-                                        [-122.48404, 37.830497],
-                                        [-122.483482, 37.82992],
-                                        [-122.483568, 37.829548],
-                                        [-122.48507, 37.829446],
-                                        [-122.4861, 37.828802],
-                                        [-122.486958, 37.82931],
-                                        [-122.487001, 37.830802],
-                                        [-122.487516, 37.831683],
-                                        [-122.488031, 37.832158],
-                                        [-122.488889, 37.832971],
-                                        [-122.489876, 37.832632],
-                                        [-122.490434, 37.832937],
-                                        [-122.49125, 37.832429],
-                                        [-122.491636, 37.832564],
-                                        [-122.492237, 37.833378],
-                                        [-122.493782, 37.833683]
-                                    ]
-                                }
-                            }
-                        });
-                        map.addLayer({
-                            'id': 'route',
-                            'type': 'line',
-                            'source': 'route',
-                            'layout': {
-                                'line-join': 'round',
-                                'line-cap': 'round'
-                            },
-                            'paint': {
-                                'line-color': '#888',
-                                'line-width': 8
-                            }
-                        });
-                    });
-        </script>
+                    const mymap = L.map('mymap').setView([lat, lon], 15);
+                    const attribution =
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+                    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                    const tiles = L.tileLayer(tileUrl, { attribution });
+                    tiles.addTo(mymap);
+                    const marker = L.marker([lat, lon]).addTo(mymap);
+                });
+
+
+            var map = L.map('map').setView([lat, lon], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+                    .openPopup();
+
+
+            // MAP BOX SCRIPT
+
+            // mapboxgl.accessToken = 'pk.eyJ1Ijoic2NydWNoZXIiLCJhIjoiY2t3dW5tYnNlMXM1MTJxdXMwb3BlZWJmYiJ9.2iqhSE1FU68zhi4MgrsFwg';
+            // var map = new mapboxgl.Map({
+            //     container: 'map',
+            //     // center: [-122.486052, 37.830348],
+            //     style: 'mapbox://styles/mapbox/streets-v11'
+            // });
+
+            // map.on('load', () => {
+            //     map.addSource('route', {
+            //         'type': 'geojson',
+            //         'data': {
+            //             'type': 'Feature',
+            //             'properties': {},
+            //             'geometry': {
+            //                 'type': 'LineString',
+            //                 'coordinates': [lat, lon]
+            //             }
+            //         }
+            //     });
+            //     map.addLayer({
+            //         'id': 'route',
+            //         'type': 'line',
+            //         'source': 'route',
+            //         'layout': {
+            //             'line-join': 'round',
+            //             'line-cap': 'round'
+            //         },
+            //         'paint': {
+            //             'line-color': '#888',
+            //             'line-width': 8
+            //         }
+            //     });
+            // });
+    </script>
+ 
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+            <!-- <script src="./map.js"></script> -->
     
 </body>
 </html>
