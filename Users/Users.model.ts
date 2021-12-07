@@ -9,10 +9,10 @@ import { v4 } from "uuid";
 export class User extends Schema {
 
     @Field(() => String)
-    @prop({
-        type: String,
-        default: v4(),
-    })
+    // @prop({
+    //     type: String,
+    //     default: v4(),
+    // })
    _id: string
 
     @Field(() => String)

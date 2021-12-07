@@ -16,14 +16,14 @@ export class LocationService {
         const { _id }= context.user._id;
         let updated
         try{
-            updated = StoreModel.findOne(_id, {
+            updated = StoreModel.findOneAndUpdate(_id, {
             $push: {
-                location: {
+                locations: {
                     coordinates: locationInput,
                 }
             }
             }) ||
-                UserModel.findOne(_id, {
+                UserModel.findOneAndUpdate(_id, {
                     $push: {
                         location: {
                             coordinates: locationInput,
@@ -35,6 +35,7 @@ export class LocationService {
         } catch (err) {
             console.log(err)
         }
+        console.log(updated)
         return updated
     }
 
