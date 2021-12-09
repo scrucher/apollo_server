@@ -12,6 +12,7 @@ import path from 'path'
 import { IsAuthorized } from "./Utilities/IsAuthorized";
 import { LocationService } from "./Geo/Location.Service";
 import { LocationInput } from "./Geo/location.input";
+import { GetDirection } from "./EstimateRoute";
 
 
 const app: Application = express()
@@ -24,6 +25,11 @@ export async function App() {
         authChecker: customAuthChecker,
     });
     app.use(cors());
+    app.use("/map/optimizedroute", async (req, res) => {
+        console.log("reuest is here")
+        await GetDirection(req, res);
+    });
+    // app.use();
     const apolloServer = new ApolloServer({
         schema,
         plugins: [
@@ -31,8 +37,10 @@ export async function App() {
                 ? ApolloServerPluginLandingPageProductionDefault()
                 : ApolloServerPluginLandingPageGraphQLPlayground(),
         ],
-        context: async ({ req }) => {
+
+        context: async ({ req, res }) => {
             const user = await IsAuthorized(req);
+            // GetDirection(req, res);
             //@ts-ignore
             req.user = user
             // const locationInput: LocationInput = req.body
@@ -41,6 +49,7 @@ export async function App() {
                 req,
                 //@ts-ignore
                 user: req.user, // `req.user` comes from `express-jwt`
+
             };
             return context;
         },

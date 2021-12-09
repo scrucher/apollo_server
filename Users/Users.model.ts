@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { Authorized, Field, ObjectType, ID } from "type-graphql";
 import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
-import { v4 } from "uuid";
+
 
 
 
@@ -9,10 +9,6 @@ import { v4 } from "uuid";
 export class User extends Schema {
 
     @Field(() => String)
-    // @prop({
-    //     type: String,
-    //     default: v4(),
-    // })
    _id: string
 
     @Field(() => String)

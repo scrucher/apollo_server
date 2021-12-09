@@ -21,27 +21,53 @@
 
     <div id="map"></div>
     <script>
-        let lat;
-            let lon;
+        var url = 'http://localhost:3000/map/optimizedroute'
+        // AJAX Script
+               
+/*                 const res = fetch(url, { method: 'GET' })
+                    .then(Result => Result.json())
+                    .then(string => {
 
-                navigator.geolocation.getCurrentPosition(position => {
-                    lat = position.coords.latitude;
-                    lon = position.coords.longitude;
-                    console.log(lat, lon);
-                    document.getElementById('latitude').textContent = lat;
-                    document.getElementById('longitude').textContent = lon;
+                        // Printing our response
+                        console.log(string);
 
-                    const mymap = L.map('mymap').setView([lat, lon], 15);
-                    const attribution =
-                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-                    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-                    const tiles = L.tileLayer(tileUrl, { attribution });
-                    tiles.addTo(mymap);
-                    const marker = L.marker([lat, lon]).addTo(mymap);
-                });
+                        // Printing our field of our response
+                        console.log(`Title of our response :  ${string.title}`);
+                    })
+                    .catch(errorMsg => { console.log(errorMsg); });
+                console.log(res) */
+            async function fetchAsync(url) {
+                    let response = await fetch(url);
+                    let data = await response.json();
+                    console.log({data:data})
+                    return ({data});
+                }
+                // const data = async function (url){
+                //     const http = new XMLHttpRequest();
+                //     await http.open("GET", url);
+                //     await http.send();
+                //     // await http.onload = () => console.log(http.responseText)
+                //     const result = await http.response;
+                //     console.log(result);
+                //     return result ; 
+                // }
+                fetchAsync(url)
+                const res = fetchAsync(url);
+
+            // const res = fetchAsync(url)
+            console.log({data: res});
 
 
-            var map = L.map('map').setView([lat, lon], 13);
+
+        // MAP Script 
+        var position = navigator.geolocation.getCurrentPosition((position)=>{
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude; 
+            console.log(position);
+            console.log({lat: lat, lon: lon})
+
+            var map = L.map('map').setView([lat, lon], 15);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -50,14 +76,36 @@
                 L.marker([lat, lon]).addTo(map)
                     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
                     .openPopup();
+                    // const mymap = L.map('map').setView([lat, lon], 15);
+                    const attribution =
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+                    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                    const tiles = L.tileLayer(tileUrl, { attribution });
+                    tiles.addTo(map);
+                    const marker = L.marker([lat, lon]).addTo(map);   
+        })
 
 
+
+
+
+
+                                    // navigator.geolocation.getCurrentPosition(position => {
+                //     lat = position.coords.latitude;
+                //     lon = position.coords.longitude;
+
+                //     console.log({lat: lat, lon: lon});
+                //     // document.getElementById('latitude').textContent = lat;
+                //     // document.getElementById('longitude').textContent = lon;
+
+
+                // });
             // MAP BOX SCRIPT
 
             // mapboxgl.accessToken = 'pk.eyJ1Ijoic2NydWNoZXIiLCJhIjoiY2t3dW5tYnNlMXM1MTJxdXMwb3BlZWJmYiJ9.2iqhSE1FU68zhi4MgrsFwg';
             // var map = new mapboxgl.Map({
             //     container: 'map',
-            //     // center: [-122.486052, 37.830348],
+            //     center: [lat, lon],
             //     style: 'mapbox://styles/mapbox/streets-v11'
             // });
 
