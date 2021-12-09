@@ -12,8 +12,9 @@ import { Context } from "apollo-server-core";
 export class MessageService {
 
     async CreateMessage(messageInput: MessageInput, context: Context): Promise<Message> {
+        console.log(context)
         //@ts-ignore
-        const user = context?.user._id;
+        const user = context.user._id;
         const Message = new MessageModel();
         //@ts-ignore
         Message.message_body = messageInput.message_body;
