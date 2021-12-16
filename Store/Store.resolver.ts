@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "type-graphql";
+import { Args, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Inject, Service } from "typedi";
 import { GoogleAuth } from "../Api/google.auth";
 import { GoogleInput } from "../Api/Google.input";
@@ -7,6 +7,8 @@ import { StoreInput } from "./Store.input";
 import { Store } from "./Store.model"
 import { StoreService } from "./Store.service";
 import { StoreLoginInput } from "./StoreLogin.input";
+import { Context } from "apollo-server-core";
+import { LocationInput } from "../Utilities/location.input";
 
 
 
@@ -48,6 +50,11 @@ export class StoreResolver {
     @Mutation(returns => Store , {nullable: true})
     async StoreLogin(@Args() storeLoginInput: StoreLoginInput) {
         return await this.storeService.StoreLogin(storeLoginInput);
+    }
+
+    @Mutation(returns => Store, { nullable: true })
+    async UpdateStoreLocation(@Args() locationInput: LocationInput, @Ctx() context: Context) {
+        return await this.storeService.updateStoreLocation(locationInput, context)
     }
 
 }

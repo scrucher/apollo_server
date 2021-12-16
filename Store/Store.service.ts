@@ -2,11 +2,12 @@ import { Service } from "typedi";
 import { StoreInput } from "./Store.input";
 import { Store, StoreModel } from "./Store.model";
 import * as crypto from "crypto";
-import { v4 } from "uuid";
 import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
 import { StoreLoginInput } from "./StoreLogin.input";
 import { StorePayload } from "./Store.payload";
+import { Context } from "apollo-server-core";
+import { LocationInput } from "../Utilities/location.input";
 
 @Service('Store_Service')
 export class StoreService {
@@ -139,5 +140,21 @@ export class StoreService {
 
         // return updated;
 
+    }
+
+    async updateStoreLocation(locationInput: LocationInput, context: Context) {
+        //@ts-ignore
+        const { _id } = context.user._id;
+        let updated
+        try {
+            updated = StoreModel.updateOne({ user: _id }, locationInput, {
+                    upsert: true
+                }
+                )
+        } catch (err) {
+            console.log(err)
+        }
+        console.log(updated)
+        return updated?.coordinates.toString('hex');
     }
 }

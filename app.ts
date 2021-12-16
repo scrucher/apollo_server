@@ -7,12 +7,12 @@ import { GoogleAuth } from "./Api/google.auth";
 import { customAuthChecker } from "./Utilities/custom-auth-check";
 import * as StaticFiles from "node-static";
 import cors from "cors";
-import path from 'path'
+// import path from 'path'
 
 import { IsAuthorized } from "./Utilities/IsAuthorized";
-import { LocationService } from "./Geo/Location.Service";
-import { LocationInput } from "./Geo/location.input";
-import { GetDirection } from "./EstimateRoute";
+// import { LocationService } from "./Geo/Location.Service";
+// import { LocationInput } from "./Geo/location.input";
+// import { GetDirection } from "./EstimateRoute";
 
 
 const app: Application = express()
@@ -25,10 +25,7 @@ export async function App() {
         authChecker: customAuthChecker,
     });
     app.use(cors());
-    app.use("/map/optimizedroute", async (req, res) => {
-        console.log("reuest is here")
-        await GetDirection(req, res);
-    });
+
     // app.use();
     const apolloServer = new ApolloServer({
         schema,
@@ -40,11 +37,8 @@ export async function App() {
 
         context: async ({ req, res }) => {
             const user = await IsAuthorized(req);
-            // GetDirection(req, res);
             //@ts-ignore
             req.user = user
-            // const locationInput: LocationInput = req.body
-            // const UpdateLocation = LocationService.updateLocation(locationInput, req)
             const context = {
                 req,
                 //@ts-ignore

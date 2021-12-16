@@ -5,7 +5,11 @@ import { InputType, ArgsType, Field } from "type-graphql";
 @InputType()
 export class LocationInput {
 
+    @Field(() => String)
+    type: string;
+    
     @Field(() => [Number])
     coordinates: number[];
+
 
 }

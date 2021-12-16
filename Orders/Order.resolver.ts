@@ -1,6 +1,6 @@
 import { Context } from "apollo-server-core";
-import { Ctx } from "routing-controllers";
-import { Args, Mutation, Query, Resolver} from "type-graphql";
+import { any } from "joiful";
+import { Args, Mutation, Query, Resolver, Ctx} from "type-graphql";
 import { ContextParamMetadata } from "type-graphql/dist/metadata/definitions";
 import { Inject, Service } from "typedi";
 import { OrderArgs } from "./Order.args";
@@ -31,9 +31,9 @@ export class OrderResolver {
 
 
 
-    @Mutation(returns => Order)
+    @Mutation(returns => Order, {nullable: true})
     //@ts-ignore
-    async CreateOrder(@Args("storeInput") storeInput: OrderInput, context: Context) {
+    async CreateOrder(@Args("storeInput") storeInput: OrderInput,@Ctx() context: Context) {
         return await this.productService.CreateOrder(storeInput, context)
     }
 

@@ -6,6 +6,8 @@ import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
 import { DriverLoginInput } from "./DriverLogin.input";
 import { DriverPayload } from "./Driver.payload";
+import { Context } from "apollo-server-core";
+import { LocationInput } from "../Utilities/location.input";
 
 @Service('Driver_Service')
 export class DriverService {
@@ -139,4 +141,22 @@ export class DriverService {
         // return updated;
 
     }
+
+
+    async updateDriverLocation(locationInput: LocationInput, context: Context) {
+        //@ts-ignore
+        const { _id } = context.user._id;
+        let updated
+        try {
+            updated = DriverModel.updateOne({ user: _id }, locationInput, {
+                upsert: true
+            }
+            )
+        } catch (err) {
+            console.log(err)
+        }
+        console.log(updated)
+        return updated
+    }
+
 }
