@@ -7,27 +7,46 @@ import { OrderModel, Order } from "./Order.model";
 import { OrderInput } from "./Order.input";
 import { OrderArgs } from "./Order.args";
 import { Context } from "apollo-server-core";
+import { GetDirection } from "../EstimateRoute";
+import { UserModel } from "../Users/Users.model";
+import { StoreModel } from "../Store/Store.model";
 
 @Service('Order_Service')
 export class OrderService {
 
     async CreateOrder(orderInput: OrderInput, context: Context): Promise<Order> {
-        const user = "";
+        const route = Array();
+        //@ts-ignore
+        const user_id = context.user._id;;
         const order = new OrderModel();
         //@ts-ignore
         order.products = orderInput.products;
         order.store = orderInput.store;
-        order.client = user
-
+        order.client = user_id
         let saved;
+        let rout;
         try {
             saved = await OrderModel.create(order)
+            const store = await StoreModel.findOne({
+                store: orderInput.store
+            });
+            const user = await UserModel.findOne({
+                user: user_id,
+            })
+            console.log(store, user);
+            const user_coordinates = user?.coordinates;
+            const store_coordinares = store?.coordinates;
+            console.log({user_coordinates, store_coordinares})
+            rout = await GetDirection({user_coordinates, store_coordinares})
+
         } catch (err) {
             console.log(err);
             throw new InternalServerError("Cannot Save Order");
         }
-        console.log(saved);
-        return saved;
+        route.push(rout)
+        console.log({ data: saved, route: route });
+        //@ts-ignore
+        return ({saved, route});
     }
 
 
@@ -39,7 +58,6 @@ export class OrderService {
             console.log(err);
             throw new InternalServerError('Internal Server Error');
         }
-
         return found;
     }
 
@@ -52,9 +70,7 @@ export class OrderService {
                 console.log(err);
                 return ("Internal Server error");
             })
-
         return found;
-
     }
 
     async DeleteOrder(orderArgs: OrderArgs, context : Context): Promise<void | any> {
@@ -84,9 +100,6 @@ export class OrderService {
             console.log(err);
             throw new InternalServerError("Internal Server Error");
         }
-
         return updated;
-
     }
-
 }

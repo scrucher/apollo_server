@@ -60,6 +60,21 @@ export class Store extends Schema {
 
     @Field(() => String)
     token: string
+    
+    @Field(() => String)
+    @prop({
+        type: String,
+        enum: ["Point"],
+        required: true,
+    })
+    type?: string;
+
+    @Field(() => [Number])
+    @prop({
+        type: [Number],
+        required: true,
+    })
+    coordinates?: number[];
 
     @Field(() => ID)
     @prop({

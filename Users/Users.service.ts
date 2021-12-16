@@ -2,15 +2,20 @@ import { Service } from "typedi";
 import { UserInput } from "./Users.input";
 import { User, UserModel } from "./Users.model";
 import * as crypto from "crypto";
-import { v4 } from "uuid";
 import GenerateToken from "../Utilities/GenerateTK";
 import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
 import { UserLoginInput } from "./UsersLogin.input";
+import { Context } from "apollo-server-core";
+import { LocationInput } from "../Utilities/location.input";
+
 
 @Service('User_Service')
-export class UserService {
-    async CreateStore(storeInput : UserInput){
-        const { username,
+export class UserService
+{
+    async CreateStore(storeInput: UserInput)
+    {
+        const
+            { username,
             email,
             phone,
             city,
@@ -18,14 +23,19 @@ export class UserService {
             image,
             region,
             country,
-            password } = storeInput;
-        const found = await UserModel.findOne({
+            password
+        } = storeInput;
+        const found = await UserModel.findOne(
+            {
             where: email
-        })
-        if (found?.email === email && found?.city === city) {
+            }
+        )
+        if (found?.email === email && found?.city === city)
+        {
             console.log(found)
             throw new InternalServerError("Account Already Exist")
-        } else {
+        } else
+        {
             const user = new UserModel;
             user.username = username;
             user.salt = crypto.randomBytes(16).toString('hex')
@@ -44,12 +54,12 @@ export class UserService {
                 .catch(err => {
                     console.log(err);
                     throw new InternalServerError("Account Already Exist")
-                })
-            console.log(saved._id);
-            const token = GenerateToken(saved._id)
-            return ({data:saved, token: token});
-            
-
+                }
+            );
+            const user_email = user.email;
+            const user_username = user.username;
+            const token: string = GenerateToken({ user_username, user_email });
+            return ({token: token});
         }
     }
 
@@ -67,7 +77,7 @@ export class UserService {
         //@ts-ignore
         const pswd = await crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString('hex');
         if (user && pswd === user.password) {
-            const token = GenerateToken(user._id);
+            const token = GenerateToken({email: user.email, usernmae: user.username});
             return ({user, token: token });
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")
@@ -104,30 +114,45 @@ export class UserService {
         
     }
 
-    async deleteStore():Promise<void> {
-        // const id =""
-        // const deleted = await UserModel.deleteOne()
-        //     .then((data: any) => {
-        //         return data
-        //     })
-        //     .catch((err: Error) => {
-
-        // return deleted;
-
+    async deleteUser(id: string): Promise<any> {
+        let deleted;
+        try{
+            deleted = await UserModel.deleteOne({ _id: id })
+        } catch (err) {
+            throw new InternalServerError('Internal Server Error')
+        }
+        if (deleted.deletedCount === 1) return "User Deleted Successfully";
     }
-    async updateStore() {
-        // const data = {};
-        // const id = ""
-        // const updated = await UserModel.update(filter: "")
-        //     .then((data: any) => {
-        //         return data
-        //     })
-        //     .catch((err: Error) => {
-        //         console.log(err);
-        //         return ("Internal Server error");
-        //     })
 
-        // return updated;
-
+    async updateUser(id: string, userInput : UserInput){
+        const data = userInput;
+        let updated;
+        {
+            updated = await UserModel.updateOne({ _id: id }, data, {
+            upsert: true,
+            })
+        }
+        return updated;
     }
+
+    async updateUserLocation(locationInput: LocationInput, context: Context) {
+        //@ts-ignore
+        const { _id } = context.user._id;
+        let updated
+        try {
+            updated = 
+                UserModel.updateOne(
+                    {
+                        user: _id
+                    }, locationInput, {
+                    upsert: true
+                }
+                )
+        } catch (err) {
+            console.log(err)
+        }
+        console.log(updated)
+        return updated;
+    }
+
 }

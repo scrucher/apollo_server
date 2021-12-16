@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
-import { Authorized, Field, ObjectType, ID } from "type-graphql";
-import { getModelForClass, mongoose, prop } from "@typegoose/typegoose";
+import { Authorized, Field, ObjectType } from "type-graphql";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
 
 
@@ -52,6 +52,21 @@ export class User extends Schema {
         typre: Array
     })
     image?: string
+
+    @Field(() => String)
+    @prop({
+        type: String,
+        enum: ["Point"],
+        required: true,
+    })
+    type?: string;
+
+    @Field(() => [Number])
+    @prop({
+        type: [Number],
+        required: true,
+    })
+    coordinates?: number[];
 
     @Field(() => String)
     token: string

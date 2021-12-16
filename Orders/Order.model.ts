@@ -28,9 +28,13 @@ export class Order extends Schema {
     @prop()
     total_price: string
 
+    @Field(() => [String])
+    route: [string]
+
 
     @prop({ ref: "UserModel" })
     public client: Ref<User>;
+
 
     @Field(()=> [ID])
     @prop({ ref: "ProductModel" })
