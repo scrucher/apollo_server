@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 import { Authorized, Field, ID, ObjectType, } from "type-graphql";
 import { getModelForClass, mongoose, prop, Ref } from "@typegoose/typegoose";
 import { Product } from "../Products/Product.model";
+import { arrayProp } from "typegoose";
 
 
 
@@ -53,24 +54,35 @@ export class Driver extends Schema {
     @prop()
     image?: string
 
+    @Field(() => Boolean)
+    @prop({
+        type: Boolean,
+        default: false,
+    })
+    busy?: boolean
+
 
     @Field(() => String)
     token: string
 
-    @Field(() => String)
-    @prop({
-        type: String,
-        enum: ["Point"],
-        required: true,
-    })
-    type?: string;
+    // @Field(() => String, { nullable: true })
+    // @prop({
+    //     type: String,
+    //     enum: ["Point"],
+    //     required: true,
+    // })
+    // // type?: string;
 
-    @Field(() => [Number])
-    @prop({
-        type: [Number],
-        required: true,
-    })
-    coordinates?: number[];
+    // @Field(() => [String], { nullable: true })
+    // @prop({
+    //     type: "Point",
+    //     required: true,
+    //     default: null
+    // })
+    // coordinates?: number[];
+    @Field(()=> Array)
+    @arrayProp({ items: Array })
+    location?: [[Number]]
 
     @Field(() => ID)
     @prop({
@@ -82,15 +94,6 @@ export class Driver extends Schema {
     })
     public products: Ref<Product>;
 
-    @Field(() => ID)
-    @prop({
-        type: mongoose.Types.ObjectId,
-        ref: "LocationModel",
-        foreignField: "location",
-        localField: "_id",
-        justOne: false,
-    })
-    public location: Ref<Location>;
 
     @Authorized("Driver")
     @Field({ nullable: true })

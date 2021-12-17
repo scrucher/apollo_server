@@ -56,8 +56,8 @@ export class UserService
                     throw new InternalServerError("Account Already Exist")
                 }
             );
-            const user_email = user.email;
-            const user_username = user.username;
+            const user_email = saved.email;
+            const user_username = saved.username;
             const token: string = GenerateToken({ user_username, user_email });
             return ({token: token});
         }
@@ -82,8 +82,6 @@ export class UserService
         } else {
             throw new HttpError(400,  "Email Or Password Not Correct Check and Try Again")
         }
-        return;
-        
     }
 
     async getAllStores(){

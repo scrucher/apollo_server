@@ -1,24 +1,21 @@
 import { buildSchema } from "type-graphql";
-import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageProductionDefault } from "apollo-server-core";
+import {
+    ApolloServerPluginLandingPageGraphQLPlayground
+    , ApolloServerPluginLandingPageProductionDefault
+} from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import express, { Application} from "express";
 import Container from "typedi";
 import { GoogleAuth } from "./Api/google.auth";
 import { customAuthChecker } from "./Utilities/custom-auth-check";
-import * as StaticFiles from "node-static";
 import cors from "cors";
-// import path from 'path'
-
 import { IsAuthorized } from "./Utilities/IsAuthorized";
-// import { LocationService } from "./Geo/Location.Service";
-// import { LocationInput } from "./Geo/location.input";
-// import { GetDirection } from "./EstimateRoute";
+import { Server } from "http";
 
 
 const app: Application = express()
 
 export async function App() {
-    const files = new StaticFiles.Server("./public")
     const schema = await buildSchema({
         resolvers: [__dirname + "/**/*.resolver.{ts,js}"],
         container: Container,
@@ -36,13 +33,13 @@ export async function App() {
         ],
 
         context: async ({ req, res }) => {
-            const user = await IsAuthorized(req);
-            //@ts-ignore
-            req.user = user
+            // const user = await IsAuthorized(req);
+            // //@ts-ignore
+            // req.user = user
             const context = {
-                req,
-                //@ts-ignore
-                user: req.user, // `req.user` comes from `express-jwt`
+                // req,
+                // //@ts-ignore
+                // user: req.user, // `req.user` comes from `express-jwt`
 
             };
             return context;
@@ -60,9 +57,7 @@ export async function App() {
         return res.send("hello")
     })
     app.get("/",(req, res) => {
-        // req.addListener('end', function () {
-        //     files.serve(req, res);
-        // })
+
         res.sendFile(__dirname + "/public/map.html", (err: any, data: any) => {
             console.log("randome log")
             console.log(err);
@@ -70,9 +65,7 @@ export async function App() {
         })
         console.log('data')
     })
-    // app.use('/static', express.static(path.join(__dirname, 'public')));
     apolloServer.applyMiddleware({ app });
-
 }
 
 export default app;

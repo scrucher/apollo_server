@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 import { Authorized, Field, ObjectType } from "type-graphql";
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { string } from "joiful";
 
 
 
@@ -53,7 +54,7 @@ export class User extends Schema {
     })
     image?: string
 
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     @prop({
         type: String,
         enum: ["Point"],
@@ -61,10 +62,11 @@ export class User extends Schema {
     })
     type?: string;
 
-    @Field(() => [Number])
+    @Field(() => [String], {nullable: true})
     @prop({
-        type: [Number],
+        type: [String],
         required: true,
+        default: null
     })
     coordinates?: number[];
 

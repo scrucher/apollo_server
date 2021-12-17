@@ -15,7 +15,6 @@ async function Main() {
         autoIndex: true,
     })
         .then(() => {
-        // mongoose.set('debug', true)
         app.listen(port, ()=>{
             console.log(`app listen on port ${port}`);
         });
