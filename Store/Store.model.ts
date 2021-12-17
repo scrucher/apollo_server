@@ -61,7 +61,7 @@ export class Store extends Schema {
     @Field(() => String)
     token: string
     
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     @prop({
         type: String,
         enum: ["Point"],
@@ -69,10 +69,11 @@ export class Store extends Schema {
     })
     type?: string;
 
-    @Field(() => [Number])
+    @Field(() => [String], { nullable: true })
     @prop({
-        type: [Number],
+        type: [String],
         required: true,
+        default: null
     })
     coordinates?: number[];
 

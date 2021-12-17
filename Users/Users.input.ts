@@ -38,6 +38,13 @@ export class UserInput{
     @Field(() => String)
     image?: string
 
+    @Field(() => String, { nullable: true })
+    type?: string;
+
+    @Field(() => [String], { nullable: true })
+    coordinates?: number[];
+
+
     @Field(() => String)
     @MaxLength(30)
     adress?: string
