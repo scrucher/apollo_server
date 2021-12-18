@@ -1,8 +1,5 @@
 import { Service } from "typedi";
-import * as crypto from "crypto";
-import { v4 } from "uuid";
-import GenerateToken from "../Utilities/GenerateTK";
-import { HttpError, InternalServerError, NotFoundError } from "routing-controllers";
+import { InternalServerError} from "routing-controllers";
 import { OrderModel, Order } from "./Order.model";
 import { OrderInput } from "./Order.input";
 import { OrderArgs } from "./Order.args";
@@ -10,6 +7,7 @@ import { Context } from "apollo-server-core";
 import { GetDirection } from "../EstimateRoute";
 import { UserModel } from "../Users/Users.model";
 import { StoreModel } from "../Store/Store.model";
+import { AssignOrderToDriver } from "../Orders/utilities/assignOrdertodriver";
 
 @Service('Order_Service')
 export class OrderService {
@@ -25,6 +23,7 @@ export class OrderService {
         order.client = user_id
         let saved;
         let rout;
+        let driver;
         try {
             saved = await OrderModel.create(order)
             const store = await StoreModel.findOne({
@@ -37,7 +36,8 @@ export class OrderService {
             const user_coordinates = user?.coordinates;
             const store_coordinares = store?.coordinates;
             console.log({user_coordinates, store_coordinares})
-            rout = await GetDirection({user_coordinates, store_coordinares})
+            rout = await GetDirection({ user_coordinates, store_coordinares })
+            driver = await AssignOrderToDriver(store_coordinares, saved._id, store?._id, user?._id)
 
         } catch (err) {
             console.log(err);
@@ -46,7 +46,7 @@ export class OrderService {
         route.push(rout)
         console.log({ data: saved, route: route });
         //@ts-ignore
-        return ({saved, route});
+        return ({saved, route, driver});
     }
 
 

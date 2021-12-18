@@ -21,7 +21,11 @@ export class StoreService {
             region,
             country,
             password } = storeInput;
-        const found = await StoreModel.findOne({ email })
+        const found = await StoreModel.findOne(
+            {
+                where: email
+            }
+        );
         if (found?.email === email && found?.city === city) {
             console.log(found)
             throw new InternalServerError("Account Already Exist")

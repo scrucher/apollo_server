@@ -12,6 +12,7 @@ import { LocationInput } from "../Utilities/location.input";
 @Service('Driver_Service')
 export class DriverService {
     async CreateDriver (driverInput: DriverInput){
+        console.log(driverInput)
         const { username,
             email,
             phone,
@@ -20,7 +21,8 @@ export class DriverService {
             image,
             region,
             country,
-            password } = driverInput;
+            password,
+            location} = driverInput;
         const found = await DriverModel.findOne({ email })
         if (found?.email === email && found?.city === city) {
             console.log(found)
@@ -39,7 +41,9 @@ export class DriverService {
             driver.adress = adress;
             driver.region = region;
             driver.country = country;
-            const saved = await DriverModel.create(driver)
+            driver.location = location;
+            console.log({"location": driver.location})
+            const saved = await driver.save()
                 .then(data => data)
                 .catch(err => {
                     console.log(err);
@@ -53,6 +57,7 @@ export class DriverService {
                 email: saved.email
                 }
             const token = GenerateToken(payload)
+            console.log({ data: saved, token: token })
             return ({data:saved, token: token});
         }
     }

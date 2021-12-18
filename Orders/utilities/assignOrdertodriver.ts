@@ -6,7 +6,7 @@ import { StoreNotificationsModel } from "../../Store/store.notifications";
 
 
 
-async function AssignOrderToDriver(coordinates: any, order: any, store: any, user: any) {
+export async function AssignOrderToDriver(coordinates: any, order: any, store: any, user: any) {
     const date = Date.now();
     await OrderToDriverModel.deleteMany()
         .where("date", date)
@@ -58,5 +58,4 @@ async function AssignOrderToDriver(coordinates: any, order: any, store: any, use
             console.log(err);
             throw new InternalServerError('Internal Server Error');
         })
-    
 }

@@ -60,22 +60,13 @@ export class Store extends Schema {
 
     @Field(() => String)
     token: string
-    
-    @Field(() => String, { nullable: true })
-    @prop({
-        type: String,
-        enum: ["Point"],
-        required: true,
-    })
-    type?: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => [Number], { nullable: true })
     @prop({
-        type: [String],
+        type: [Number],
         required: true,
-        default: null
     })
-    coordinates?: number[];
+    location?: number[];
 
     @Field(() => ID)
     @prop({
@@ -86,16 +77,6 @@ export class Store extends Schema {
         justOne: false,
     })
     public products: Ref<Product>;
-
-    @Field(() => ID)
-    @prop({
-        type: mongoose.Types.ObjectId,
-        ref: "LocationModel",
-        foreignField: "location",
-        localField: "_id",
-        justOne: false,
-    })
-    public location: Ref<Location>;
 
     @Authorized("STORE")
     @Field({ nullable: true })
