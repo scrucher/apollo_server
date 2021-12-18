@@ -42,4 +42,8 @@ export class DriverInput{
     @MaxLength(30)
     adress?: string
 
+    @Field(() => [Number])
+    location: number[];
+
+
 }

@@ -42,4 +42,7 @@ export class StoreInput{
     @MaxLength(30)
     adress?: string
 
+    @Field(() => [Number])
+    location: number[];
+
 }

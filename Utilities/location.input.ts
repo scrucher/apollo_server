@@ -1,3 +1,4 @@
+import { isNumber } from "class-validator";
 import { InputType, ArgsType, Field } from "type-graphql";
 
 
@@ -9,7 +10,7 @@ export class LocationInput {
     type: string;
     
     @Field(() => [Number])
-    coordinates: number[];
+    location: number[];
 
 
 }

@@ -65,34 +65,21 @@ export class Driver extends Schema {
     @Field(() => String)
     token: string
 
-    // @Field(() => String, { nullable: true })
-    // @prop({
-    //     type: String,
-    //     enum: ["Point"],
-    //     required: true,
-    // })
-    // // type?: string;
-
-    // @Field(() => [String], { nullable: true })
-    // @prop({
-    //     type: "Point",
-    //     required: true,
-    //     default: null
-    // })
-    // coordinates?: number[];
-    @Field(()=> Array)
-    @arrayProp({ items: Array })
-    location?: [[Number]]
-
-    @Field(() => ID)
+    @Field(() => [Number], { nullable: true })
     @prop({
-        type: mongoose.Types.ObjectId  ,
-        ref:"ProductModel",
-        foreignField: "products",
-        localField: "_id",
-        justOne: false,
+        type: [Number],
+        required: true,
     })
-    public products: Ref<Product>;
+    location?: number[];
+
+    // @Field(() => ID)
+    // @prop({
+    //     ref:"ProductModel",
+    //     foreignField: "products",
+    //     localField: "_id",
+    //     justOne: false,
+    // })
+    // public products: Ref<Product>;
 
 
     @Authorized("Driver")

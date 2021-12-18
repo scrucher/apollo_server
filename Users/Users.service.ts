@@ -135,17 +135,15 @@ export class UserService
 
     async updateUserLocation(locationInput: LocationInput, context: Context) {
         //@ts-ignore
-        const { _id } = context.user._id;
+        const _id  =  "61bb4d6074befd339f97d521";
+        const { type, coordinates } = locationInput;
+        const user = new UserModel();
         let updated
         try {
-            updated = 
-                UserModel.updateOne(
-                    {
-                        user: _id
-                    }, locationInput, {
-                    upsert: true
-                }
-                )
+            user.type = type;
+            user.coordinates = coordinates;
+            updated =
+                UserModel.updateOne(user).where("_id", _id);
         } catch (err) {
             console.log(err)
         }

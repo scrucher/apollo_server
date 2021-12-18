@@ -41,8 +41,8 @@ export class UserInput{
     @Field(() => String, { nullable: true })
     type?: string;
 
-    @Field(() => [String], { nullable: true })
-    coordinates?: number[];
+    @Field(() => [Number], { nullable: true })
+    location?: number[];
 
 
     @Field(() => String)
